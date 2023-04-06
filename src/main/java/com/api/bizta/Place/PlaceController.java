@@ -1,0 +1,31 @@
+package com.api.bizta.Place;
+
+import com.api.bizta.Place.model.GetPlaceInfo;
+import com.api.bizta.config.BaseException;
+import com.api.bizta.config.BaseResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/places")
+public class PlaceController {
+    @Autowired
+    private final PlaceProvider placeProvider;
+    private final PlaceService placeService;
+
+    public PlaceController(PlaceProvider placeProvider, PlaceService placeService) {
+        this.placeProvider = placeProvider;
+        this.placeService = placeService;
+    }
+
+    @ResponseBody
+    @GetMapping("/{placeIdx}") //특정 장소 정보 조회 /places/1
+    public BaseResponse<GetPlaceInfo> getPlaceInfo(@PathVariable("placeIdx") int placeIdx) {
+        try {
+            GetPlaceInfo placeInfo = placeProvider.getPlaceInfo(placeIdx);
+            return new BaseResponse<>(placeInfo);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+}
