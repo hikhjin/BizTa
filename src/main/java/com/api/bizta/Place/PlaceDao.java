@@ -1,6 +1,7 @@
 package com.api.bizta.Place;
 
 import com.api.bizta.Place.model.GetPlaceInfo;
+import com.api.bizta.Place.model.GetPlaceReservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,6 +35,20 @@ public class PlaceDao {
 
     }
 
+    public GetPlaceReservation getPlaceReservation(int placeIdx) {
+
+        String getPlaceReservationQuery =
+                "select placeIdx, siteUrl, contact from Place " +
+                        "where placeIdx = ? and status = 'active';";
+
+        try {
+            return this.jdbcTemplate.queryForObject(getPlaceReservationQuery, placeReservationRowMapper(), placeIdx);
+        } catch (EmptyResultDataAccessException e) { // 쿼리문에 해당하는 결과가 없을 때
+            return null;
+        }
+
+    }
+
     private RowMapper<GetPlaceInfo> placeInfoRowMapper(){
         return new RowMapper<GetPlaceInfo>() {
             @Override
@@ -48,6 +63,19 @@ public class PlaceDao {
                 placeInfo.setGrade(rs.getFloat("grade"));
                 placeInfo.setReviewCnt(rs.getInt("reviewCnt"));
                 return placeInfo;
+            }
+        };
+    }
+
+    private RowMapper<GetPlaceReservation> placeReservationRowMapper(){
+        return new RowMapper<GetPlaceReservation>() {
+            @Override
+            public GetPlaceReservation mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetPlaceReservation placeReservation = new GetPlaceReservation();
+                placeReservation.setPlaceIdx(rs.getInt("placeIdx"));
+                placeReservation.setSiteUrl(rs.getString("siteUrl"));
+                placeReservation.setContact(rs.getString("contact"));
+                return placeReservation;
             }
         };
     }
