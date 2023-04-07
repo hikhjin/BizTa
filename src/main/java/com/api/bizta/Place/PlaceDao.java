@@ -23,7 +23,7 @@ public class PlaceDao {
     public GetPlaceInfo getPlaceInfo(int placeIdx) {
 
         String getPlaceInfoQuery =
-                "select placeIdx, name, imgUrl, siteUrl, contact, address, description, grade, reviewCnt " +
+                "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt " +
                         "from Place where placeIdx = ? and status = 'active';";
 
         try {
@@ -41,10 +41,9 @@ public class PlaceDao {
                 GetPlaceInfo placeInfo = new GetPlaceInfo();
                 placeInfo.setPlaceIdx(rs.getInt("placeIdx"));
                 placeInfo.setName(rs.getString("name"));
+                placeInfo.setCategory(rs.getString("category"));
                 placeInfo.setImgUrl(rs.getString("imgUrl"));
-                placeInfo.setSiteUrl(rs.getString("siteUrl"));
-                placeInfo.setContact(rs.getString("contact"));
-                placeInfo.setAddress("address");
+                placeInfo.setAddress(rs.getString("address"));
                 placeInfo.setDescription(rs.getString("description"));
                 placeInfo.setGrade(rs.getFloat("grade"));
                 placeInfo.setReviewCnt(rs.getInt("reviewCnt"));

@@ -12,9 +12,8 @@ import lombok.Setter;
 public class GetPlaceInfo {
     private int placeIdx;
     private String name;
+    private String category;
     private String imgUrl;
-    private String siteUrl;
-    private String contact;
     private String address;
     private String description;
     private float grade;
