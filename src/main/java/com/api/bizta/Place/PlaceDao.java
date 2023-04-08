@@ -1,6 +1,7 @@
 package com.api.bizta.Place;
 
 import com.api.bizta.Place.model.GetPlaceInfo;
+import com.api.bizta.Place.model.GetPlaceReservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,11 +24,25 @@ public class PlaceDao {
     public GetPlaceInfo getPlaceInfo(int placeIdx) {
 
         String getPlaceInfoQuery =
-                "select placeIdx, name, imgUrl, siteUrl, contact, address, description, grade, reviewCnt " +
+                "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt " +
                         "from Place where placeIdx = ? and status = 'active';";
 
         try {
             return this.jdbcTemplate.queryForObject(getPlaceInfoQuery, placeInfoRowMapper(), placeIdx);
+        } catch (EmptyResultDataAccessException e) { // 쿼리문에 해당하는 결과가 없을 때
+            return null;
+        }
+
+    }
+
+    public GetPlaceReservation getPlaceReservation(int placeIdx) {
+
+        String getPlaceReservationQuery =
+                "select placeIdx, siteUrl, contact from Place " +
+                        "where placeIdx = ? and status = 'active';";
+
+        try {
+            return this.jdbcTemplate.queryForObject(getPlaceReservationQuery, placeReservationRowMapper(), placeIdx);
         } catch (EmptyResultDataAccessException e) { // 쿼리문에 해당하는 결과가 없을 때
             return null;
         }
@@ -41,14 +56,26 @@ public class PlaceDao {
                 GetPlaceInfo placeInfo = new GetPlaceInfo();
                 placeInfo.setPlaceIdx(rs.getInt("placeIdx"));
                 placeInfo.setName(rs.getString("name"));
+                placeInfo.setCategory(rs.getString("category"));
                 placeInfo.setImgUrl(rs.getString("imgUrl"));
-                placeInfo.setSiteUrl(rs.getString("siteUrl"));
-                placeInfo.setContact(rs.getString("contact"));
-                placeInfo.setAddress("address");
+                placeInfo.setAddress(rs.getString("address"));
                 placeInfo.setDescription(rs.getString("description"));
                 placeInfo.setGrade(rs.getFloat("grade"));
                 placeInfo.setReviewCnt(rs.getInt("reviewCnt"));
                 return placeInfo;
+            }
+        };
+    }
+
+    private RowMapper<GetPlaceReservation> placeReservationRowMapper(){
+        return new RowMapper<GetPlaceReservation>() {
+            @Override
+            public GetPlaceReservation mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetPlaceReservation placeReservation = new GetPlaceReservation();
+                placeReservation.setPlaceIdx(rs.getInt("placeIdx"));
+                placeReservation.setSiteUrl(rs.getString("siteUrl"));
+                placeReservation.setContact(rs.getString("contact"));
+                return placeReservation;
             }
         };
     }

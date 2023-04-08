@@ -9,13 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetPlaceInfo {
+public class GetPlaceReservation {
     private int placeIdx;
-    private String name;
-    private String category;
-    private String imgUrl;
-    private String address;
-    private String description;
-    private float grade;
-    private int reviewCnt;
+    private String siteUrl;
+    private String contact;
 }
