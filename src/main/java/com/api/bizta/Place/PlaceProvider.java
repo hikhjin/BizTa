@@ -1,6 +1,7 @@
 package com.api.bizta.Place;
 
 import com.api.bizta.Place.model.GetPlaceInfo;
+import com.api.bizta.Place.model.GetPlaceReservation;
 import com.api.bizta.config.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,19 @@ public class PlaceProvider {
         }
         if(placeInfo == null) throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
         return placeInfo;
+    }
+
+    public GetPlaceReservation getPlaceReservation(int placeIdx) throws BaseException {
+
+        GetPlaceReservation placeReservation;
+        try {
+            placeReservation = placeDao.getPlaceReservation(placeIdx);
+        }
+        catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+        if(placeReservation == null) throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
+        return placeReservation;
     }
 }
