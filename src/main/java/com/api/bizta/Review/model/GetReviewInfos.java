@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetReviewInfo {
+public class GetReviewInfos {
     private int placeIdx;
     private int userIdx;
     private float rating;
