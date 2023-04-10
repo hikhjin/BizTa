@@ -10,8 +10,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetReviewInfos {
+    private int reviewIdx;
     private int placeIdx;
     private int userIdx;
     private float rating;
     private String content;
+
 }
