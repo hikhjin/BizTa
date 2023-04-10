@@ -36,17 +36,14 @@ public class ReviewDao {
     }
 
     private RowMapper<GetReviewInfos> reviewInfosRowMapper(){
-        return new RowMapper<GetReviewInfos>() {
-            @Override
-            public GetReviewInfos mapRow(ResultSet rs, int rowNum) throws SQLException {
-                GetReviewInfos reviewInfo = new GetReviewInfos();
-                reviewInfo.setReviewIdx(rs.getInt("reviewIdx"));
-                reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
-                reviewInfo.setUserIdx(rs.getInt("userIdx"));
-                reviewInfo.setRating(rs.getFloat("rating"));
-                reviewInfo.setContent(rs.getString("content"));
-                return reviewInfo;
-            }
+        return (rs, rowNum) -> {
+            GetReviewInfos reviewInfo = new GetReviewInfos();
+            reviewInfo.setReviewIdx(rs.getInt("reviewIdx"));
+            reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
+            reviewInfo.setUserIdx(rs.getInt("userIdx"));
+            reviewInfo.setRating(rs.getFloat("rating"));
+            reviewInfo.setContent(rs.getString("content"));
+            return reviewInfo;
         };
     }
 }
