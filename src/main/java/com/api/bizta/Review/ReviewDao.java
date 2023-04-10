@@ -1,6 +1,6 @@
 package com.api.bizta.Review;
 
-import com.api.bizta.Review.model.GetReviewInfos;
+import com.api.bizta.Review.model.GetReviewInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,8 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -22,22 +20,22 @@ public class ReviewDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<GetReviewInfos> getReviewInfo(int placeIdx){
+    public List<GetReviewInfo> getReviewInfos(int placeIdx){
         String getReviewInfosQuery =
                 "select reviewIdx, placeIdx, userIdx, rating, content from Review " +
                         "where placeIdx = ? and status = 'active';";
 
         try{
-            List<GetReviewInfos> reviews = this.jdbcTemplate.query(getReviewInfosQuery, reviewInfosRowMapper(), placeIdx);
+            List<GetReviewInfo> reviews = this.jdbcTemplate.query(getReviewInfosQuery, reviewInfosRowMapper(), placeIdx);
             return reviews;
         }catch(EmptyResultDataAccessException e){
             return null;
         }
     }
 
-    private RowMapper<GetReviewInfos> reviewInfosRowMapper(){
+    private RowMapper<GetReviewInfo> reviewInfosRowMapper(){
         return (rs, rowNum) -> {
-            GetReviewInfos reviewInfo = new GetReviewInfos();
+            GetReviewInfo reviewInfo = new GetReviewInfo();
             reviewInfo.setReviewIdx(rs.getInt("reviewIdx"));
             reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
             reviewInfo.setUserIdx(rs.getInt("userIdx"));

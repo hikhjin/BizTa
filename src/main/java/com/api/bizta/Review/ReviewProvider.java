@@ -1,6 +1,6 @@
 package com.api.bizta.Review;
 
-import com.api.bizta.Review.model.GetReviewInfos;
+import com.api.bizta.Review.model.GetReviewInfo;
 import com.api.bizta.config.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,11 @@ public class ReviewProvider {
         this.reviewDao = reviewDao;
     }
 
-    public List<GetReviewInfos> getReviewInfos(int placeIdx) throws BaseException{
+    public List<GetReviewInfo> getReviewInfos(int placeIdx) throws BaseException{
 
-        List<GetReviewInfos> reviewInfos;
+        List<GetReviewInfo> reviewInfos;
         try{
-            reviewInfos = reviewDao.getReviewInfo(placeIdx);
+            reviewInfos = reviewDao.getReviewInfos(placeIdx);
         }catch (Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);

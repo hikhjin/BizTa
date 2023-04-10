@@ -1,13 +1,12 @@
 package com.api.bizta.Review;
 
-import com.api.bizta.Review.model.GetReviewInfos;
+import com.api.bizta.Review.model.GetReviewInfo;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -24,9 +23,9 @@ public class ReviewController {
 
     @ResponseBody
     @GetMapping("/{placeIdx}/reviews")
-    public BaseResponse<List<GetReviewInfos>> getReviewInfos(@PathVariable("placeIdx") int placeIdx, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "descending") String order){
+    public BaseResponse<List<GetReviewInfo>> getReviewInfos(@PathVariable("placeIdx") int placeIdx, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "descending") String order){
         try{
-            List<GetReviewInfos> reviewInfos = reviewProvider.getReviewInfos(placeIdx);
+            List<GetReviewInfo> reviewInfos = reviewProvider.getReviewInfos(placeIdx);
 
             if(sort.equals("latest") && order.equals("ascending")){ // 오래된순
                 return new BaseResponse<>(reviewInfos);
