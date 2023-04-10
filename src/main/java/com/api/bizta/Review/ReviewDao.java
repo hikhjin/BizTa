@@ -24,7 +24,7 @@ public class ReviewDao {
 
     public List<GetReviewInfos> getReviewInfo(int placeIdx){
         String getReviewInfosQuery =
-                "select placeIdx, userIdx, rating, content from Review " +
+                "select reviewIdx, placeIdx, userIdx, rating, content from Review " +
                         "where placeIdx = ? and status = 'active';";
 
         try{
@@ -40,6 +40,7 @@ public class ReviewDao {
             @Override
             public GetReviewInfos mapRow(ResultSet rs, int rowNum) throws SQLException {
                 GetReviewInfos reviewInfo = new GetReviewInfos();
+                reviewInfo.setReviewIdx(rs.getInt("reviewIdx"));
                 reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
                 reviewInfo.setUserIdx(rs.getInt("userIdx"));
                 reviewInfo.setRating(rs.getFloat("rating"));
