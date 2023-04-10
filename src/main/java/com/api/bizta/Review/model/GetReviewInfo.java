@@ -12,7 +12,7 @@ import lombok.Setter;
 public class GetReviewInfo {
     private int reviewIdx;
     private int placeIdx;
-    private int userIdx;
+    private String nickName;
     private float rating;
     private String content;
 

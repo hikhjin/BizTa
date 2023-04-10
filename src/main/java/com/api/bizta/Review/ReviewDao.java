@@ -22,8 +22,9 @@ public class ReviewDao {
 
     public List<GetReviewInfo> getReviewInfos(int placeIdx){
         String getReviewInfosQuery =
-                "select reviewIdx, placeIdx, userIdx, rating, content from Review " +
-                        "where placeIdx = ? and status = 'active';";
+                "select r.placeIdx, r.reviewIdx, u.nickName, r.rating, r.content from Review r " +
+                        "join User u on r.userIdx = u.userIdx " +
+                        "where placeIdx = ? and r.status = 'active';";
 
         try{
             List<GetReviewInfo> reviews = this.jdbcTemplate.query(getReviewInfosQuery, reviewInfosRowMapper(), placeIdx);
@@ -36,9 +37,9 @@ public class ReviewDao {
     private RowMapper<GetReviewInfo> reviewInfosRowMapper(){
         return (rs, rowNum) -> {
             GetReviewInfo reviewInfo = new GetReviewInfo();
-            reviewInfo.setReviewIdx(rs.getInt("reviewIdx"));
             reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
-            reviewInfo.setUserIdx(rs.getInt("userIdx"));
+            reviewInfo.setReviewIdx(rs.getInt("reviewIdx"));
+            reviewInfo.setNickName(rs.getString("nickName"));
             reviewInfo.setRating(rs.getFloat("rating"));
             reviewInfo.setContent(rs.getString("content"));
             return reviewInfo;
