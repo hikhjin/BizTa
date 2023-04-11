@@ -7,6 +7,8 @@ import com.api.bizta.config.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/places")
 public class PlaceController {
@@ -17,6 +19,18 @@ public class PlaceController {
     public PlaceController(PlaceProvider placeProvider, PlaceService placeService) {
         this.placeProvider = placeProvider;
         this.placeService = placeService;
+    }
+
+    @ResponseBody
+    @GetMapping
+    public BaseResponse<List<GetPlaceInfo>> getPlaceInfos(){
+        try{
+            List<GetPlaceInfo> placeInfos = placeProvider.getPlaceInfos();
+
+            return new BaseResponse<>(placeInfos);
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
     @ResponseBody
@@ -40,4 +54,5 @@ public class PlaceController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
 }

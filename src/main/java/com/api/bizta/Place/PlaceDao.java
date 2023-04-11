@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class PlaceDao {
@@ -19,6 +20,22 @@ public class PlaceDao {
 
     @Autowired
     public void setDataSource(DataSource dataSource) {this.jdbcTemplate = new JdbcTemplate(dataSource);}
+
+    // 전체 장소 조회
+    public List<GetPlaceInfo> getPlaceInfos() {
+
+        String getPlaceInfosQuery =
+                "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt " +
+                        "from Place where status = 'active';";
+
+        try {
+            List<GetPlaceInfo> places = this.jdbcTemplate.query(getPlaceInfosQuery, placeInfoRowMapper());
+            return places;
+        } catch (EmptyResultDataAccessException e) { // 쿼리문에 해당하는 결과가 없을 때
+            return null;
+        }
+
+    }
 
     //특정 주식 정보 조회
     public GetPlaceInfo getPlaceInfo(int placeIdx) {

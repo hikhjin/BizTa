@@ -1,6 +1,6 @@
 package com.api.bizta.Review;
 
-import com.api.bizta.Review.model.GetReviewInfos;
+import com.api.bizta.Review.model.GetReviewInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,8 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
@@ -22,30 +20,29 @@ public class ReviewDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<GetReviewInfos> getReviewInfo(int placeIdx){
+    public List<GetReviewInfo> getReviewInfos(int placeIdx){
         String getReviewInfosQuery =
-                "select placeIdx, userIdx, rating, content from Review " +
-                        "where placeIdx = ? and status = 'active';";
+                "select r.placeIdx, r.reviewIdx, u.nickName, r.rating, r.content from Review r " +
+                        "join User u on r.userIdx = u.userIdx " +
+                        "where placeIdx = ? and r.status = 'active';";
 
         try{
-            List<GetReviewInfos> reviews = this.jdbcTemplate.query(getReviewInfosQuery, reviewInfosRowMapper(), placeIdx);
+            List<GetReviewInfo> reviews = this.jdbcTemplate.query(getReviewInfosQuery, reviewInfosRowMapper(), placeIdx);
             return reviews;
         }catch(EmptyResultDataAccessException e){
             return null;
         }
     }
 
-    private RowMapper<GetReviewInfos> reviewInfosRowMapper(){
-        return new RowMapper<GetReviewInfos>() {
-            @Override
-            public GetReviewInfos mapRow(ResultSet rs, int rowNum) throws SQLException {
-                GetReviewInfos reviewInfo = new GetReviewInfos();
-                reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
-                reviewInfo.setUserIdx(rs.getInt("userIdx"));
-                reviewInfo.setRating(rs.getFloat("rating"));
-                reviewInfo.setContent(rs.getString("content"));
-                return reviewInfo;
-            }
+    private RowMapper<GetReviewInfo> reviewInfosRowMapper(){
+        return (rs, rowNum) -> {
+            GetReviewInfo reviewInfo = new GetReviewInfo();
+            reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
+            reviewInfo.setReviewIdx(rs.getInt("reviewIdx"));
+            reviewInfo.setNickName(rs.getString("nickName"));
+            reviewInfo.setRating(rs.getFloat("rating"));
+            reviewInfo.setContent(rs.getString("content"));
+            return reviewInfo;
         };
     }
 }
