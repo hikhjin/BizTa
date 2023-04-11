@@ -22,12 +22,17 @@ public enum BaseResponseStatus {
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
     INVALID_USER_JWT(false,2003,"권한이 없는 유저의 접근입니다."),
 
-    // users
-    USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
-    USERS_EXISTS_USER_ID(false,2011,"중복된 아이디입니다."),
-
-    USERS_EXISTS_USER_NAME(false,2012,"중복된 닉네임입니다."),
-    USERS_EMPTY_USER_NAME(false,2013,"유저 닉네임을 입력해주세요."),
+    // user 회원가입
+    EMPTY_ID(false,2004, "아이디를 입력해주세요."),
+    EXISTS_ID(false,2005,"중복된 아이디입니다."),
+    EMPTY_NICKNAME(false,2006,"닉네임을 입력해주세요."),
+    EXISTS_NICKNAME(false,2007,"중복된 닉네임입니다."),
+    EMPTY_EMAIL(false,2008, "이메일을 입력해주세요."),
+    INVALID_EMAIL(false,2009, "이메일 형식을 확인해주세요."),
+    EXISTS_EMAIL(false,2010,"중복된 이메일입니다."),
+    FAIL_VERIFICATION_EMAIL(false,2011,"이메일 인증이 되지 않았습니다."),
+    EMPTY_PASSWORD(false,2012, "비밀번호를 입력해주세요."),
+    INVALID_PASSWORD(false,2013, "비밀번호 형식을 확인해주세요."),
 
 
 
