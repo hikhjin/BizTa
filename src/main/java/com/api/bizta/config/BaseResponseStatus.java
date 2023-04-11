@@ -3,7 +3,7 @@ package com.api.bizta.config;
 import lombok.Getter;
 
 /**
- * 에러 코드 관리
+ * 에러 코드 관리, 추후 영어로 번역 예정
  */
 @Getter
 public enum BaseResponseStatus {
@@ -33,9 +33,6 @@ public enum BaseResponseStatus {
     FAIL_VERIFICATION_EMAIL(false,2011,"이메일 인증이 되지 않았습니다."),
     EMPTY_PASSWORD(false,2012, "비밀번호를 입력해주세요."),
     INVALID_PASSWORD(false,2013, "비밀번호 형식을 확인해주세요."),
-
-
-
 
 
     /**

@@ -1,8 +1,5 @@
 package com.api.bizta.User;
 
-import com.api.bizta.Review.ReviewProvider;
-import com.api.bizta.Review.ReviewService;
-import com.api.bizta.Review.model.GetReviewInfo;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
