@@ -2,6 +2,7 @@ package com.api.bizta.Place;
 
 import com.api.bizta.Place.model.GetPlaceInfo;
 import com.api.bizta.Place.model.GetPlaceReservation;
+import com.api.bizta.Place.model.GetPlaces;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,12 @@ public class PlaceController {
     }
 
     @ResponseBody
-    @GetMapping
-    public BaseResponse<List<GetPlaceInfo>> getPlaceInfos(){
+    @GetMapping // 전체 장소 조회(default는 카테고리 분류 X)
+    public BaseResponse<List<GetPlaces>> getPlaces(@RequestParam(required = false, defaultValue = "") String category){
         try{
-            List<GetPlaceInfo> placeInfos = placeProvider.getPlaceInfos();
+            List<GetPlaces> places = placeProvider.getPlaces(category);
 
-            return new BaseResponse<>(placeInfos);
+            return new BaseResponse<>(places);
         }catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
