@@ -1,8 +1,6 @@
 package com.api.bizta.Place;
 
-import com.api.bizta.Place.model.GetPlaceInfo;
-import com.api.bizta.Place.model.GetPlaceReservation;
-import com.api.bizta.Place.model.GetPlaces;
+import com.api.bizta.Place.model.*;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;

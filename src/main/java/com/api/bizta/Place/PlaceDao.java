@@ -1,8 +1,6 @@
 package com.api.bizta.Place;
 
-import com.api.bizta.Place.model.GetPlaceInfo;
-import com.api.bizta.Place.model.GetPlaceReservation;
-import com.api.bizta.Place.model.GetPlaces;
+import com.api.bizta.Place.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +20,7 @@ public class PlaceDao {
     @Autowired
     public void setDataSource(DataSource dataSource) {this.jdbcTemplate = new JdbcTemplate(dataSource);}
 
-    // 장소 조회
+    // 장소 전체 조회
     public List<GetPlaces> getPlaces(String category) {
 
         String getPlacesQuery;
@@ -47,7 +45,7 @@ public class PlaceDao {
         }
     }
 
-    //특정 주식 정보 조회
+    //특정 장소 정보 조회
     public GetPlaceInfo getPlaceInfo(int placeIdx) {
 
         String getPlaceInfoQuery =
@@ -62,6 +60,7 @@ public class PlaceDao {
 
     }
 
+    //특정 장소 예약 정보 조회
     public GetPlaceReservation getPlaceReservation(int placeIdx) {
 
         String getPlaceReservationQuery =

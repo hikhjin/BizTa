@@ -1,47 +1,8 @@
-//package com.api.bizta.User;
-//
-//import com.api.bizta.User.model.User;
-//import com.api.bizta.config.BaseException;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//
-//import static com.api.bizta.config.BaseResponseStatus.DATABASE_ERROR;
-//import static com.api.bizta.config.BaseResponseStatus.POST_USERS_EXISTS_EMAIL;
-//
-//@Slf4j
-//@Service
-//public class UserService {
-//
-//    private final UserProvider userProvider;
-//    private final UserDao userDao;
-//
-//    @Autowired
-//    public UserService( UserProvider userProvider, UserDao userDao) {
-//        this.userProvider = userProvider;
-//        this.userDao = userDao;
-//    }
-//
-//    public User createUser(User user) throws BaseException {
-//        if (userProvider.checkEmail(user.getEmail()) == 1)
-//            throw new BaseException(POST_USERS_EXISTS_EMAIL);
-//        try {
-//            return this.userDao.insertUser(user);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new BaseException(DATABASE_ERROR);
-//        }
-//
-//    }
-//
-//}
-//
+
 package com.api.bizta.User;
 
 import com.api.bizta.User.model.*;
 import com.api.bizta.config.BaseException;
-import com.api.bizta.utils.AES128;
 import com.api.bizta.utils.JwtService;
 import com.api.bizta.utils.SHA256;
 import org.springframework.beans.factory.annotation.Autowired;

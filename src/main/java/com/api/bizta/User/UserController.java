@@ -1,41 +1,4 @@
-//package com.api.bizta.User;
-//import com.api.bizta.User.dto.GetUserRes;
-//import com.api.bizta.User.model.User;
-//import com.api.bizta.config.BaseException;
-//import com.api.bizta.config.BaseResponse;
-//
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import javax.servlet.http.HttpServletRequest;
-//
-//@Slf4j
-//@RestController
-//@RequestMapping("/users")
-//public class UserController {
-//
-//    private final UserProvider userProvider;
-//
-//    @Autowired
-//    public UserController(UserProvider userProvider) {
-//        this.userProvider = userProvider;
-//    }
-//
-//    @GetMapping("")
-//    public BaseResponse<GetUserRes> getProfile(HttpServletRequest request) {
-//        try {
-//            Long userIdx = Long.parseLong(request.getAttribute("userIdx").toString());
-//            User user = userProvider.retrieveById(userIdx);
-//            GetUserRes getUserRes = new GetUserRes(user.getNickname(), user.getId(), user.getEmail());
-//            return new BaseResponse<>(getUserRes);
-//        } catch (BaseException e) {
-//            return new BaseResponse<>(e.getStatus());
-//        }
-//    }
-//}
+
 package com.api.bizta.User;
 
 import com.api.bizta.User.model.*;
