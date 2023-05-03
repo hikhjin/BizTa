@@ -1,7 +1,6 @@
 package com.api.bizta.Plan;
 
 import com.api.bizta.Plan.model.*;
-import com.api.bizta.User.PlanProvider;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.utils.JwtService;
 import org.springframework.stereotype.Service;
@@ -21,9 +20,12 @@ public class PlanService {
         this.planProvider = planProvider;
         this.jwtService = jwtService;
     }
+
+    // plan 추가
     public PostPlansRes createPlan(int userIdx, PostPlansReq postPlansReq) throws BaseException{
         try {
-            int planIdx = planDao.insertPlan(userIdx, postPlansReq);
+            int planIdx = planDao.insertPlanInfo(userIdx, postPlansReq); // interest 제외 plan 추가
+            planDao.insertPlanInterest(planIdx, postPlansReq); // interest 추가
             return new PostPlansRes(planIdx);
         } catch (Exception exception) {
             System.out.println(exception); // 에러 콘솔창 출력

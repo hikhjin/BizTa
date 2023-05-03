@@ -32,7 +32,6 @@ public class PlanController {
     public BaseResponse<PostPlansRes> createPlan(@RequestBody PostPlansReq postPlansReq) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
-
             if(postPlansReq.getUserIdx() != userIdxByJwt){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
             }
