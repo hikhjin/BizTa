@@ -11,7 +11,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Random;
 
 import static com.api.bizta.config.BaseResponseStatus.EMPTY_JWT;
 import static com.api.bizta.config.BaseResponseStatus.INVALID_JWT;
@@ -60,7 +62,7 @@ public class JwtService {
         Jws<Claims> claims;
         try{
             claims = Jwts.parser()
-                    .setSigningKey(Secret.JWT_SECRET_KEY)
+                    .setSigningKey(Secret.getJwtSecretKey())
                     .parseClaimsJws(accessToken);
         } catch (Exception ignored) {
             throw new BaseException(INVALID_JWT);
