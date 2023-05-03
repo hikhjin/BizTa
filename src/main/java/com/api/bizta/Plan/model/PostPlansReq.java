@@ -14,8 +14,12 @@ public class PostPlansReq {
     private String city;
     private String hotel;
     private String transport;
-    private String from;
-    private String to;
-    private int headCount;
-    private String category;
+    private String startDate;
+    private String endDate;
+    private int companionCnt;
+    private String interest1;
+    private String interest2;
+    private String interest3;
+    private String interest4;
+    private String interest5;
 }
