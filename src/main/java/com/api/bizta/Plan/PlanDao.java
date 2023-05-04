@@ -35,7 +35,10 @@ public class PlanDao {
 
     // plan 추가 (interest만)
     public int insertPlanInterest(int planIdx, PostPlansReq postPlansReq) {
-        String insertPlanQuery = "INSERT INTO ActivitiesPreference(planIdx, interest1, interest2, interest3, interest4, interest5) VALUES(?, ?, ?, ?, ?, ?)";
+        String insertPlanQuery = "INSERT INTO ActivitiesPreference(planIdx, interest1, interest2, interest3, interest4, interest5) " +
+                "VALUES(?, ?, ?, ?, ?, ?)";
+        // interest1~5가 다 없을 경우
+        //if (postPlansReq.)
         Object[] insertPlanParams = new Object[]{planIdx, postPlansReq.getInterest1(), postPlansReq.getInterest2(),
                 postPlansReq.getInterest3(), postPlansReq.getInterest4(), postPlansReq.getInterest5()};
         return this.jdbcTemplate.update(insertPlanQuery, insertPlanParams);

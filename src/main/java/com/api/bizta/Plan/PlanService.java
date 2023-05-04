@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import static com.api.bizta.config.BaseResponseStatus.DATABASE_ERROR;
 
-//plan 추가
 @Service
 public class PlanService {
 

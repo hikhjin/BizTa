@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,9 +19,5 @@ public class PostPlansReq {
     private String startDate;
     private String endDate;
     private int companionCnt;
-    private String interest1;
-    private String interest2;
-    private String interest3;
-    private String interest4;
-    private String interest5;
+    private List<PostInterestReq> interest;
 }
