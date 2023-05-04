@@ -45,4 +45,17 @@ public class PlanController {
         }
     }
 
+    // plan 삭제
+    @ResponseBody
+    @PatchMapping("/{planIdx}/status")
+    public BaseResponse<String> deletePlan(@PathVariable("planIdx") int planIdx) {
+        try{
+            planService.deletePlan(planIdx);
+            String result = "Successfully deleted plan.";
+            return new BaseResponse<>(result);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 }
