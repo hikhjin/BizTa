@@ -1,7 +1,7 @@
 package com.api.bizta.Plan;
 
 
-import com.api.bizta.Plan.model.PostPlansReq;
+import com.api.bizta.Plan.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,8 +23,8 @@ public class PlanDao {
 
     // plan 추가 (interest 제외)
     public int insertPlanInfo(int userIdx, PostPlansReq postPlansReq) {
-        String insertPlanQuery = "INSERT INTO Plan(userIdx, country, city, hotel, companionCnt, startDate, endDate) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?)";
+        String insertPlanQuery = "INSERT INTO Plan(userIdx, country, city, hotel, transport, startDate, endDate, companionCnt) " +
+                "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] insertPlanParams = new Object[]{userIdx, postPlansReq.getCountry(), postPlansReq.getCity(), postPlansReq.getHotel(),
         postPlansReq.getTransport(), postPlansReq.getStartDate(), postPlansReq.getEndDate(), postPlansReq.getCompanionCnt()};
         this.jdbcTemplate.update(insertPlanQuery, insertPlanParams);
@@ -34,13 +34,9 @@ public class PlanDao {
     }
 
     // plan 추가 (interest만)
-    public int insertPlanInterest(int planIdx, PostPlansReq postPlansReq) {
-        String insertPlanQuery = "INSERT INTO ActivitiesPreference(planIdx, interest1, interest2, interest3, interest4, interest5) " +
-                "VALUES(?, ?, ?, ?, ?, ?)";
-        // interest1~5가 다 없을 경우
-        //if (postPlansReq.)
-        Object[] insertPlanParams = new Object[]{planIdx, postPlansReq.getInterest1(), postPlansReq.getInterest2(),
-                postPlansReq.getInterest3(), postPlansReq.getInterest4(), postPlansReq.getInterest5()};
+    public int insertPlanInterest(int planIdx, PostInterestReq postInterestReq) {
+        String insertPlanQuery = "INSERT INTO Interest(planIdx, interest) VALUES(?, ?);";
+        Object[] insertPlanParams = new Object[]{planIdx, postInterestReq.getInterest()};
         return this.jdbcTemplate.update(insertPlanQuery, insertPlanParams);
     }
 }

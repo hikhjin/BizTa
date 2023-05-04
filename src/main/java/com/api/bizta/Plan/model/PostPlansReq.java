@@ -3,12 +3,14 @@ package com.api.bizta.Plan.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class PostPlansReq {
     private int userIdx;
@@ -19,5 +21,5 @@ public class PostPlansReq {
     private String startDate;
     private String endDate;
     private int companionCnt;
-    private List<PostInterestReq> interest;
+    private List<PostInterestReq> interests;
 }

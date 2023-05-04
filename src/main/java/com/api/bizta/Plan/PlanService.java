@@ -24,7 +24,9 @@ public class PlanService {
     public PostPlansRes createPlan(int userIdx, PostPlansReq postPlansReq) throws BaseException{
         try {
             int planIdx = planDao.insertPlanInfo(userIdx, postPlansReq); // interest 제외 plan 추가
-            planDao.insertPlanInterest(planIdx, postPlansReq); // interest 추가
+            for (PostInterestReq interest : postPlansReq.getInterests()){ //interest 추가
+                planDao.insertPlanInterest(planIdx, interest);
+            }
             return new PostPlansRes(planIdx);
         } catch (Exception exception) {
             System.out.println(exception); // 에러 콘솔창 출력
