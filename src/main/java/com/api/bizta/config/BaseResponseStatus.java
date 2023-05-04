@@ -37,6 +37,8 @@ public enum BaseResponseStatus {
     INVALID_PASSWORD(false,2013, "비밀번호 형식을 확인해주세요."),
 
 
+    // plan
+    DELETE_FAIL_PLAN(false, 2100, "plan 삭제에 실패하였습니다."),
 
 
 
