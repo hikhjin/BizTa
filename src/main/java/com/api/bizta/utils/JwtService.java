@@ -41,7 +41,6 @@ public class JwtService {
      */
     public String getJwt(){
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-        System.out.println(request.getHeader("X-ACCESS-TOKEN"));
         return  request.getHeader("X-ACCESS-TOKEN");
     }
 
@@ -64,7 +63,6 @@ public class JwtService {
                     .setSigningKey(Secret.JWT_SECRET_KEY)
                     .parseClaimsJws(accessToken);
         } catch (Exception ignored) {
-            System.out.println("dd");
             throw new BaseException(INVALID_JWT);
         }
 
