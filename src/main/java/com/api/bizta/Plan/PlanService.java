@@ -45,6 +45,7 @@ public class PlanService {
             }
         }
         catch (Exception exception) {
+            System.out.println(exception); // 에러 콘솔창 출력
             throw new BaseException(DATABASE_ERROR);
         }
 

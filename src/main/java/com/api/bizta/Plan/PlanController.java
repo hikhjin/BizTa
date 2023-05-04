@@ -50,6 +50,13 @@ public class PlanController {
     @PatchMapping("/{planIdx}/status")
     public BaseResponse<String> deletePlan(@PathVariable("planIdx") int planIdx) {
         try{
+            /*
+            int userIdxByJwt = jwtService.getUserIdx();
+            if(postPlansReq.getUserIdx() != userIdxByJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // jwt 확인
+            }
+
+             */
             planService.deletePlan(planIdx);
             String result = "Successfully deleted plan.";
             return new BaseResponse<>(result);
