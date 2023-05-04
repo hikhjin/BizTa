@@ -36,7 +36,7 @@ public enum BaseResponseStatus {
     EMPTY_PASSWORD(false,2012, "비밀번호를 입력해주세요."),
     INVALID_PASSWORD(false,2013, "비밀번호 형식을 확인해주세요."),
 
-    //
+
 
 
 

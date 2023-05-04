@@ -33,4 +33,19 @@ public class PlanService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    // plan 삭제
+    public void deletePlan(int planIdx) throws BaseException{
+
+        try{
+            int result = planDao.deletePlan(planIdx);
+            if(result == 0){
+                throw new BaseException(DELETE_FAIL_PLAN);
+            }
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
 }
