@@ -42,7 +42,6 @@ import com.api.bizta.User.model.*;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import static com.api.bizta.config.BaseResponseStatus.*;
@@ -52,13 +51,11 @@ import static com.api.bizta.utils.ValidationRegex.isRegexEmail;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
     private final UserProvider userProvider;
-    @Autowired
     private final UserService userService;
-    @Autowired
     private final JwtService jwtService;
-    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService){
+
+    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService) {
         this.userProvider = userProvider;
         this.userService = userService;
         this.jwtService = jwtService;
@@ -91,11 +88,59 @@ public class UserController {
 
         // 이메일 중복 확인은 [Service - Provider - Dao] 에서 합니다.
         try {
-            PostUserRes postUserRes = userService.createUser(postUserReq);
+            PostUserRes postUserRes;
+            postUserRes = userService.createUser(postUserReq);
             return new BaseResponse<>(postUserRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
 
+    // 일반 login
+    @ResponseBody
+    @PostMapping("/log-in")
+    public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
+        try {
+            if (postLoginReq.getId() == null || postLoginReq.getPassword() == null) {
+                return new BaseResponse<>(FAILED_TO_LOGIN);
+            }
+            PostLoginRes loginUser = userService.login(postLoginReq);
+            return new BaseResponse<>(loginUser);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    // google login
+    @GetMapping("/{method}/google")
+    public String googleLoginUri(@PathVariable String method){
+        String url = "https://accounts.google.com/o/oauth2/auth?client_id=356448383900-kt44mvojcmdqji36q3ad66r8gtp6am5r.apps.googleusercontent.com&";
+        if(method.equals("login")){
+            url += "redirect_uri=http://localhost:8080/users/login/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
+        }else{
+            url += "redirect_uri=http://localhost:8080/users/auth/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
+        }
+        return url;
+    }
+
+    // google login
+    @GetMapping(value = "/{method}/oauth2/code/{registrationId}", produces = "application/json")
+    public BaseResponse<PostLoginRes> oauthLogin (@PathVariable String method, @RequestParam String code, @PathVariable String registrationId) {
+        GetGoogleInfo getGoogleInfo = userService.getGoogleInfo(method, code, registrationId);
+
+        PostLoginRes postLoginRes;
+        if(method.equals("login")){
+            PostLoginReq postLoginReq = new PostLoginReq(getGoogleInfo.getId(), getGoogleInfo.getPassword());
+            try {
+                postLoginRes = userService.login(postLoginReq);
+                postLoginRes.setGetTokenRes(getGoogleInfo.getGetTokenRes());
+                return new BaseResponse<>(postLoginRes);
+            } catch (BaseException e) {
+                return new BaseResponse<>(e.getStatus());
+            }
+        }
+
+        postLoginRes = new PostLoginRes(getGoogleInfo.getId(), getGoogleInfo.getPassword(), getGoogleInfo.getEmail(), getGoogleInfo.getNickName(), getGoogleInfo.getGetTokenRes());
+        return new BaseResponse<>(postLoginRes);
+    }
 }
