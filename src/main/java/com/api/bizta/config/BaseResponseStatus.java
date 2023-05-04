@@ -45,6 +45,11 @@ public enum BaseResponseStatus {
     EMPTY_PASSWORD(false,2012, "비밀번호를 입력해주세요."),
     INVALID_PASSWORD(false,2013, "비밀번호 형식을 확인해주세요."),
 
+    // event 생성
+    EMPTY_TITLE(false, 2014, "이벤트 제목을 입력해주세요."),
+    EMPTY_DATE(false, 2015, "이벤트 날짜를 입력해주세요."),
+    DUPLICATE_TIME(false, 2016, "같은 날에 중복되는 시간이 있습니다."),
+
 
 
     /**
