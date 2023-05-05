@@ -39,4 +39,11 @@ public class PlanDao {
         Object[] insertPlanParams = new Object[]{planIdx, postInterestReq.getInterest()};
         return this.jdbcTemplate.update(insertPlanQuery, insertPlanParams);
     }
+
+    // plan 삭제
+    public int deletePlan(int planIdx) {
+        String deletePlanQuery = "UPDATE Plan SET status='deleted' WHERE planIdx=?;";
+        Object[] deletePlanParams = new Object[]{planIdx};
+        return this.jdbcTemplate.update(deletePlanQuery, deletePlanParams);
+    }
 }

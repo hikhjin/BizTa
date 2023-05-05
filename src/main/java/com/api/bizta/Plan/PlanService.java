@@ -6,6 +6,7 @@ import com.api.bizta.utils.JwtService;
 import org.springframework.stereotype.Service;
 
 import static com.api.bizta.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.api.bizta.config.BaseResponseStatus.DELETE_FAIL_PLAN;
 
 @Service
 public class PlanService {
@@ -32,5 +33,21 @@ public class PlanService {
             System.out.println(exception); // 에러 콘솔창 출력
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    // plan 삭제
+    public void deletePlan(int planIdx) throws BaseException{
+
+        try{
+            int result = planDao.deletePlan(planIdx);
+            if(result == 0){
+                throw new BaseException(DELETE_FAIL_PLAN);
+            }
+        }
+        catch (Exception exception) {
+            System.out.println(exception); // 에러 콘솔창 출력
+            throw new BaseException(DATABASE_ERROR);
+        }
+
     }
 }
