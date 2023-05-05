@@ -26,14 +26,14 @@ public class PlanController {
     // plan 추가
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<PostPlansRes> createPlan(@RequestBody PostPlansReq postPlansReq) {
+    public BaseResponse<PostPlanRes> createPlan(@RequestBody PostPlanReq postPlanReq) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
-            if(postPlansReq.getUserIdx() != userIdxByJwt){
+            if(postPlanReq.getUserIdx() != userIdxByJwt){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // jwt 확인
             }
 
-            PostPlansRes postPlanRes = planService.createPlan(postPlansReq.getUserIdx(), postPlansReq);
+            PostPlanRes postPlanRes = planService.createPlan(postPlanReq.getUserIdx(), postPlanReq);
             return new BaseResponse<>(postPlanRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -43,7 +43,7 @@ public class PlanController {
     // plan 수정
     @ResponseBody
     @PatchMapping("/{planIdx}")
-    public BaseResponse<String> modifyPlan(@RequestBody PatchPlansReq patchPlansReq) {
+    public BaseResponse<String> modifyPlan(@RequestBody PatchPlanReq patchPlansReq) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if(patchPlansReq.getUserIdx() != userIdxByJwt){

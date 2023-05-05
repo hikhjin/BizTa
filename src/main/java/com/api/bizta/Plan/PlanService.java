@@ -22,17 +22,30 @@ public class PlanService {
     }
 
     // plan 추가
-    public PostPlansRes createPlan(int userIdx, PostPlansReq postPlansReq) throws BaseException{
+    public PostPlanRes createPlan(int userIdx, PostPlanReq postPlanReq) throws BaseException{
         try {
-            int planIdx = planDao.insertPlanInfo(userIdx, postPlansReq); // interest 제외 plan 추가
-            for (PostInterestReq interest : postPlansReq.getInterests()){ //interest 추가
+            int planIdx = planDao.insertPlanInfo(userIdx, postPlanReq); // interest 제외 plan 추가
+            for (PostInterestReq interest : postPlanReq.getInterests()){ //interest 추가
                 planDao.insertPlanInterest(planIdx, interest);
             }
-            return new PostPlansRes(planIdx);
+            return new PostPlanRes(planIdx);
         } catch (Exception exception) {
             System.out.println(exception); // 에러 콘솔창 출력
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    // plan 수정
+    public void modifyPlan(int planIdx, PatchPlanReq patchPlanReq) throws BaseException{
+
+        try{
+            int result = PlanDao.modifyPlan(patchPlanReq);
+            if(result == 0) throw new BaseException(MODIFY_FAIL_PLAN);
+        }
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+
     }
 
     // plan 삭제

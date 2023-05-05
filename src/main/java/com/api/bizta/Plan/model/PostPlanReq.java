@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostPlansReq {
+public class PostPlanReq {
     private int userIdx;
     private String country;
     private String city;

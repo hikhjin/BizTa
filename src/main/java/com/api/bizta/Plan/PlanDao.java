@@ -17,11 +17,11 @@ public class PlanDao {
     public void setDataSource(DataSource dataSource) {this.jdbcTemplate = new JdbcTemplate(dataSource);}
 
     // plan 추가 (interest 제외)
-    public int insertPlanInfo(int userIdx, PostPlansReq postPlansReq) {
+    public int insertPlanInfo(int userIdx, PostPlanReq postPlanReq) {
         String insertPlanQuery = "INSERT INTO Plan(userIdx, country, city, hotel, transport, startDate, endDate, companionCnt) " +
                 "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] insertPlanParams = new Object[]{userIdx, postPlansReq.getCountry(), postPlansReq.getCity(), postPlansReq.getHotel(),
-        postPlansReq.getTransport(), postPlansReq.getStartDate(), postPlansReq.getEndDate(), postPlansReq.getCompanionCnt()};
+        Object[] insertPlanParams = new Object[]{userIdx, postPlanReq.getCountry(), postPlanReq.getCity(), postPlanReq.getHotel(),
+        postPlanReq.getTransport(), postPlanReq.getStartDate(), postPlanReq.getEndDate(), postPlanReq.getCompanionCnt()};
         this.jdbcTemplate.update(insertPlanQuery, insertPlanParams);
 
         String lastInsertIdxQuery = "select last_insert_id()"; // 마지막으로 삽입된 Idx 반환
