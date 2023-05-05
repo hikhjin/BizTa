@@ -89,7 +89,7 @@ public class UserController {
     // google login
     @GetMapping(value = "/{method}/oauth2/code/{registrationId}", produces = "application/json")
     public BaseResponse<PostLoginRes> oauthLogin (@PathVariable String method, @RequestParam String code, @PathVariable String registrationId) {
-        GetGoogleInfo getGoogleInfo = userService.getGoogleInfo(method, code, registrationId);
+        GetGoogleInfo getGoogleInfo = userProvider.getGoogleInfo(method, code, registrationId);
 
         PostLoginRes postLoginRes;
         if(method.equals("login")){
