@@ -1,14 +1,11 @@
 package com.api.bizta.Plan;
-import com.api.bizta.Plan.model.PostPlansReq;
-import com.api.bizta.Plan.model.PostPlansRes;
+import com.api.bizta.Plan.model.*;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.config.BaseResponseStatus;
 import com.api.bizta.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/plans")
@@ -43,6 +40,23 @@ public class PlanController {
         }
     }
 
+    // plan 수정
+    @ResponseBody
+    @PatchMapping("/{planIdx}")
+    public BaseResponse<String> modifyPlan(@RequestBody PatchPlansReq patchPlansReq) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if(patchPlansReq.getUserIdx() != userIdxByJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // jwt 확인
+            }
+            planService.modifyPlan(patchPlansReq.getPlansIdx(), patchPlansReq);
+            String result = "Successfully modified plan.";
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
     // plan 삭제
     @ResponseBody
     @PatchMapping("/{planIdx}/status")
@@ -55,6 +69,7 @@ public class PlanController {
             }
 
              */
+
             planService.deletePlan(planIdx);
             String result = "Successfully deleted plan.";
             return new BaseResponse<>(result);
