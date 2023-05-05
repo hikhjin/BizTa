@@ -5,8 +5,7 @@ import com.api.bizta.config.BaseException;
 import com.api.bizta.utils.JwtService;
 import org.springframework.stereotype.Service;
 
-import static com.api.bizta.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.api.bizta.config.BaseResponseStatus.DELETE_FAIL_PLAN;
+import static com.api.bizta.config.BaseResponseStatus.*;
 
 @Service
 public class PlanService {
