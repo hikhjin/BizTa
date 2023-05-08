@@ -44,6 +44,7 @@ public enum BaseResponseStatus {
 
     // plan
     DELETE_FAIL_PLAN(false, 2100, "plan 삭제에 실패하였습니다."),
+    MODIFY_FAIL_PLAN(false, 2101, "plan 수정에 실패하였습니다."),
 
 
 

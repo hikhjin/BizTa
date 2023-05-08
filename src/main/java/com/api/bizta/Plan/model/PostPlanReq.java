@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostPlansReq {
+public class PostPlanReq {
     private int userIdx;
     private String country;
     private String city;
@@ -21,5 +21,5 @@ public class PostPlansReq {
     private String startDate;
     private String endDate;
     private int companionCnt;
-    private List<PostInterestReq> interests;
+    private List<InterestReq> interests;
 }

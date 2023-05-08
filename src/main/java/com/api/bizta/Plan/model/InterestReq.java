@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostPlansRes {
-    private int planIdx;
+public class InterestReq {
+    private String interest;
 }

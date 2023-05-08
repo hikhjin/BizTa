@@ -5,8 +5,7 @@ import com.api.bizta.config.BaseException;
 import com.api.bizta.utils.JwtService;
 import org.springframework.stereotype.Service;
 
-import static com.api.bizta.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.api.bizta.config.BaseResponseStatus.DELETE_FAIL_PLAN;
+import static com.api.bizta.config.BaseResponseStatus.*;
 
 @Service
 public class PlanService {
@@ -22,18 +21,48 @@ public class PlanService {
     }
 
     // plan 추가
-    public PostPlansRes createPlan(int userIdx, PostPlansReq postPlansReq) throws BaseException{
+    public PostPlanRes createPlan(int userIdx, PostPlanReq postPlanReq) throws BaseException{
         try {
-            int planIdx = planDao.insertPlanInfo(userIdx, postPlansReq); // interest 제외 plan 추가
-            for (PostInterestReq interest : postPlansReq.getInterests()){ //interest 추가
+            int planIdx = planDao.insertPlanInfo(userIdx, postPlanReq); // interest 제외 plan 추가
+            for (InterestReq interest : postPlanReq.getInterests()){ //interest 추가
                 planDao.insertPlanInterest(planIdx, interest);
             }
-            return new PostPlansRes(planIdx);
+            return new PostPlanRes(planIdx);
         } catch (Exception exception) {
             System.out.println(exception); // 에러 콘솔창 출력
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    // plan 수정
+    public void modifyPlan(int planIdx, PatchPlanReq patchPlanReq) throws BaseException{
+
+        try{
+            int result = planDao.modifyPlanInfo(patchPlanReq);
+            planDao.deleteInterest(planIdx); // 기존 interest 삭제
+            for (InterestReq interest : patchPlanReq.getInterests()){
+                result = planDao.insertPlanInterest(planIdx, interest);
+            }
+            if(result == 0) throw new BaseException(MODIFY_FAIL_PLAN);
+        }
+        catch (Exception exception) {
+            System.out.println(exception); // 에러 콘솔창 출력
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
+
+    /*
+    // interest 이미 선택됐는지 확인
+    public int checkInterest(String interest) throws BaseException {
+        try{
+            return planDao.checkInterest(interest);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+     */
 
     // plan 삭제
     public void deletePlan(int planIdx) throws BaseException{
