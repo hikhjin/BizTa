@@ -1,22 +1,19 @@
 package com.api.bizta.Event;
 
 import com.api.bizta.Event.model.GetEventInfo;
+import com.api.bizta.Event.model.GetEventsInfo;
 import com.api.bizta.Event.model.PatchEventReq;
 import com.api.bizta.Event.model.PostEventReq;
-import com.api.bizta.Place.model.GetPlaceInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class EventDao {
@@ -40,7 +37,7 @@ public class EventDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdxQuery, int.class);
     }
 
-    // planIdx 와 eventIdx 로 중복되는 event 시간이 있는지 확인, 없으면 0 리턴
+    // planIdx 와 userIdx 로 중복되는 event 시간이 있는지 확인, 없으면 0 리턴
     public int checkDuplicateTime(int planIdx, int userIdx, String date, String startTime, String endTime){
 
         String checkDuplicateTimeQuery = "SELECT COUNT(*) " +
@@ -48,6 +45,7 @@ public class EventDao {
                 "WHERE planIdx = ? " +
                 "AND userIdx = ? " +
                 "AND date = ? " +
+                "AND status = 'active' " +
                 "AND EXISTS (" +
                 "SELECT 1 " +
                 "FROM Event " +
@@ -64,6 +62,33 @@ public class EventDao {
         return this.jdbcTemplate.queryForObject(checkDuplicateTimeQuery,
                 int.class,
                 checkDuplicateTimeParams);
+    }
+
+    public int checkDuplicateTimeNotEventIdx(int eventIdx, int planIdx, int userIdx, String date, String startTime, String endTime){
+
+        String checkDuplicateTimeNotEventIdxQuery = "SELECT COUNT(*) " +
+                "FROM Event " +
+                "WHERE planIdx = ? " +
+                "AND userIdx = ? " +
+                "AND date = ? " +
+                "AND status = 'active' " +
+                "AND eventIdx != ? " +
+                "AND EXISTS (" +
+                "SELECT 1 " +
+                "FROM Event " +
+                "WHERE planIdx = ? " +
+                "AND userIdx = ? " +
+                "AND date = ? " +
+                "AND ((startTime <= ? AND ? < endTime) OR " +
+                "(startTime < ? AND ? <= endTime) OR " +
+                "(? <= startTime AND endTime <= ?)) " +
+                ")";
+
+        Object[] checkDuplicateTimeNotEventIdxParams = new Object[]{planIdx, userIdx, date, eventIdx, planIdx, userIdx, date, startTime, startTime, endTime, endTime, startTime, endTime};
+
+        return this.jdbcTemplate.queryForObject(checkDuplicateTimeNotEventIdxQuery,
+                int.class,
+                checkDuplicateTimeNotEventIdxParams);
     }
 
     // 특정 이벤트 조회
@@ -106,7 +131,7 @@ public class EventDao {
                 "startTime = coalesce(?, startTime), " +
                 "endTime = coalesce(?, endTime), " +
                 "description = coalesce(?, description) "  +
-                "where eventIdx = ?";
+                "where eventIdx = ? and status = 'active'";
         Object[] modifyEventParams = new Object[]{patchEventReq.getTitle(), patchEventReq.getDate(), patchEventReq.getStartTime(),
         patchEventReq.getEndTime(), patchEventReq.getDescription(), eventIdx};
 
@@ -119,6 +144,44 @@ public class EventDao {
             return this.jdbcTemplate.queryForObject(checkEventExistQuery,
                     int.class,
                     checkEventExistParams);
+    }
 
+    public void deleteEvent(int eventIdx){
+        String deleteEventQuery = "update Event " +
+                "set " +
+                "status = 'deleted' " +
+                "where eventIdx = ?";
+        int deleteEventParam = eventIdx;
+
+        this.jdbcTemplate.update(deleteEventQuery, deleteEventParam);
+    }
+
+    public List<GetEventsInfo> getEventsInfo(int planIdx) {
+
+        String getEventsInfoQuery = "select userIdx, title, date, startTime, endTime " +
+                    "from Event where planIdx = ? and status = 'active';";
+
+        int getEventsParam = planIdx;
+
+        try {
+            return this.jdbcTemplate.query(getEventsInfoQuery, eventsInfoRowMapper(), getEventsParam);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    private RowMapper<GetEventsInfo> eventsInfoRowMapper(){
+        return new RowMapper<GetEventsInfo>() {
+            @Override
+            public GetEventsInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetEventsInfo getEventsInfo = new GetEventsInfo();
+                getEventsInfo.setUserIdx(rs.getInt("userIdx"));
+                getEventsInfo.setTitle(rs.getString("title"));
+                getEventsInfo.setDate(rs.getString("date"));
+                getEventsInfo.setStartTime(rs.getString("startTime"));
+                getEventsInfo.setEndTime(rs.getString("endTime"));
+                return getEventsInfo;
+            }
+        };
     }
 }

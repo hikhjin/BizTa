@@ -17,16 +17,11 @@ public class EventService {
 
     private final EventDao eventDao;
     private final EventProvider eventProvider;
-    private final JwtService jwtService;
-    private final Environment env;
-    private final RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
-    public EventService(EventDao eventDao, EventProvider eventProvider, JwtService jwtService, Environment env) {
+    public EventService(EventDao eventDao, EventProvider eventProvider) {
         this.eventDao = eventDao;
         this.eventProvider = eventProvider;
-        this.jwtService = jwtService;
-        this.env = env;
     }
 
     public PostEventRes makeEvent(PostEventReq postEventReq) throws BaseException {
@@ -36,7 +31,6 @@ public class EventService {
 
         try{
             int eventIdx = eventDao.makeEvent(postEventReq);
-            System.out.println("service eventIdx: " + eventIdx);
             return new PostEventRes(eventIdx);
         } catch (Exception exception) {
             System.out.println(exception);
@@ -46,14 +40,15 @@ public class EventService {
 
     // event 수정
     public String modifyEvent(int eventIdx, PatchEventReq patchEventReq) throws BaseException{
-        if(eventProvider.checkDuplicateTime(patchEventReq.getPlanIdx(), patchEventReq.getUserIdx(), patchEventReq.getDate(),
-                patchEventReq.getStartTime(), patchEventReq.getEndTime()) != 0){
-            throw new BaseException(DUPLICATE_TIME);
-        }
 
         // 수정하는 event가 존재하는지
         if(eventProvider.checkEventExist(eventIdx) != 1){
             throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
+        }
+
+        if(eventProvider.checkDuplicateTimeNotEventIdx(eventIdx, patchEventReq.getPlanIdx(), patchEventReq.getUserIdx(), patchEventReq.getDate(),
+                patchEventReq.getStartTime(), patchEventReq.getEndTime()) != 0){
+            throw new BaseException(DUPLICATE_TIME);
         }
 
         try{
@@ -62,6 +57,21 @@ public class EventService {
         } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // event 삭제
+    public String deleteEvent(int eventIdx) throws BaseException{
+        try{
+            // event 존재 여부
+            if(eventProvider.checkEventExist(eventIdx) == 0){
+                throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
+            }
+
+            eventDao.deleteEvent(eventIdx);
+            return "Successfully deleted event.";
+        }catch (Exception e){
+            throw new BaseException(DELETE_FAIL_EVENT);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.api.bizta.Place.model;
+package com.api.bizta.Favorite.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,13 +7,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class GetPlaces {
+@NoArgsConstructor
+public class GetFavoritesInfo {
     private int placeIdx;
     private String name;
     private String imgUrl;
-    private float grade;
-//    private boolean favoriteCnt;
     private int reviewCnt;
+    private float grade;
 }

@@ -1,4 +1,4 @@
-package com.api.bizta.Review.model;
+package com.api.bizta.Favorite.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,10 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class GetReviewInfo {
-    private int reviewIdx;
+@NoArgsConstructor
+public class PostFavoriteReq {
     private int userIdx;
-
 }

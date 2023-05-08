@@ -120,4 +120,18 @@ public class PlaceDao {
             }
         };
     }
+
+    // 특정 장소에 대한 리뷰 개수와 grade 계산
+    public void updateCntAndGrade(int placeIdx){
+        String updateCntAndGradeQuery = "update Place p " +
+                "set p.reviewCnt = (SELECT COUNT(*) FROM Review r WHERE r.placeIdx = ? and r.status = 'active'), " +
+                "p.grade = round(" +
+                "(select sum(rating)/count(*) " +
+                "from Review r " +
+                "where r.placeIdx = ? and r.status = 'active'), 2) " +
+                "where p.placeIdx = ?";
+        Object[] updateCntAndGradeParam = new Object[]{placeIdx, placeIdx, placeIdx};
+
+        this.jdbcTemplate.update(updateCntAndGradeQuery, updateCntAndGradeParam);
+    }
 }
