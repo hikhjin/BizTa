@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PatchPlanReq extends PostPlanReq {
+public class PatchPlanReq extends PlanInfo {
     private int planIdx;
 }

@@ -26,14 +26,14 @@ public class PlanController {
     // plan 추가
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<PostPlanRes> createPlan(@RequestBody PostPlanReq postPlanReq) {
+    public BaseResponse<PostPlanRes> createPlan(@RequestBody PlanInfo planInfo) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
-            if(postPlanReq.getUserIdx() != userIdxByJwt){
+            if(planInfo.getUserIdx() != userIdxByJwt){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // jwt 확인
             }
 
-            PostPlanRes postPlanRes = planService.createPlan(postPlanReq.getUserIdx(), postPlanReq);
+            PostPlanRes postPlanRes = planService.createPlan(planInfo.getUserIdx(), planInfo);
             return new BaseResponse<>(postPlanRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -74,6 +74,18 @@ public class PlanController {
             String result = "Successfully deleted plan.";
             return new BaseResponse<>(result);
         } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    // 특정 plan 조회
+    @ResponseBody
+    @GetMapping("/{planIdx}")
+    public BaseResponse<GetPlanInfo> getPlanInfo(@PathVariable ("planIdx") int planIdx) {
+        try {
+            GetPlanInfo getPlanInfo = planProvider.getPlanInfo(planIdx);
+            return new BaseResponse<>(getPlanInfo);
+        } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }

@@ -1,6 +1,5 @@
 package com.api.bizta.Plan.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +11,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostPlanReq {
+public class GetPlanInfo{
     private int userIdx;
+    private int planIdx;
     private String country;
     private String city;
     private String hotel;
@@ -21,5 +21,5 @@ public class PostPlanReq {
     private String startDate;
     private String endDate;
     private int companionCnt;
-    private List<InterestReq> interests;
+    private List<Interest> interests;
 }

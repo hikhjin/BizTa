@@ -21,10 +21,10 @@ public class PlanService {
     }
 
     // plan 추가
-    public PostPlanRes createPlan(int userIdx, PostPlanReq postPlanReq) throws BaseException{
+    public PostPlanRes createPlan(int userIdx, PlanInfo planInfo) throws BaseException{
         try {
-            int planIdx = planDao.insertPlanInfo(userIdx, postPlanReq); // interest 제외 plan 추가
-            for (InterestReq interest : postPlanReq.getInterests()){ //interest 추가
+            int planIdx = planDao.insertPlanInfo(userIdx, planInfo); // interest 제외 plan 추가
+            for (Interest interest : planInfo.getInterests()){ //interest 추가
                 planDao.insertPlanInterest(planIdx, interest);
             }
             return new PostPlanRes(planIdx);
@@ -40,7 +40,7 @@ public class PlanService {
         try{
             int result = planDao.modifyPlanInfo(patchPlanReq);
             planDao.deleteInterest(planIdx); // 기존 interest 삭제
-            for (InterestReq interest : patchPlanReq.getInterests()){
+            for (Interest interest : patchPlanReq.getInterests()){
                 result = planDao.insertPlanInterest(planIdx, interest);
             }
             if(result == 0) throw new BaseException(MODIFY_FAIL_PLAN);
