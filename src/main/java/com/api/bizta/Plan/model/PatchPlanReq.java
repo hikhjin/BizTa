@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatchPlanReq extends PostPlanReq {
-    private int plansIdx;
+    private int planIdx;
 }

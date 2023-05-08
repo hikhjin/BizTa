@@ -21,5 +21,5 @@ public class PostPlanReq {
     private String startDate;
     private String endDate;
     private int companionCnt;
-    private List<PostInterestReq> interests;
+    private List<InterestReq> interests;
 }

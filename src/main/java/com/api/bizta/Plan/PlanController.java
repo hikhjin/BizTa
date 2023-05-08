@@ -49,7 +49,7 @@ public class PlanController {
             if(patchPlansReq.getUserIdx() != userIdxByJwt){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // jwt 확인
             }
-            planService.modifyPlan(patchPlansReq.getPlansIdx(), patchPlansReq);
+            planService.modifyPlan(patchPlansReq.getPlanIdx(), patchPlansReq);
             String result = "Successfully modified plan.";
             return new BaseResponse<>(result);
         } catch (BaseException exception) {

@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostInterestReq {
+public class InterestReq {
     private String interest;
 }
