@@ -11,11 +11,13 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class PlanDao {
 
     private JdbcTemplate jdbcTemplate;
+    private List<Interest> interest;
 
     @Autowired
     public void setDataSource(DataSource dataSource) {this.jdbcTemplate = new JdbcTemplate(dataSource);}
@@ -90,12 +92,12 @@ public class PlanDao {
     public GetPlanInfo getPlanInfo(int planIdx) {
 
         String getPlanInfoQuery =
-                "select userIdx, planIdx, country, city, hotel, transport, startDate, endDate, companionCnt " +
-                        "from Plan where planIdx = ? and status = 'active';";
-        String getInterestQuery = "select interest from Interest " +
-                "where planIdx = ? and status = 'active';";
+                "SELECT userIdx, planIdx, country, city, hotel, transport, startDate, endDate, companionCnt " +
+                        "FROM Plan WHERE planIdx=? AND status = 'active';";
+        String getInterestQuery = "SELECT interest FROM Interest WHERE planIdx=? AND status = 'active';";
         try {
             return this.jdbcTemplate.queryForObject(getPlanInfoQuery,
+
                     (rs, rsNum) -> new GetPlanInfo(
                             rs.getInt("userIdx"),
                             rs.getInt("planIdx"),
@@ -106,7 +108,8 @@ public class PlanDao {
                             rs.getString("startDate"),
                             rs.getString("endDate"),
                             rs.getInt("companionCnt"),
-                            this.jdbcTemplate.query(getInterestQuery,
+
+                            interest = this.jdbcTemplate.query(getInterestQuery, new Object[]{rs.getInt("planIdx")},
                                     (rk, rkNum) -> new Interest(
                                             rk.getString("interest")
                                     ))
@@ -117,7 +120,7 @@ public class PlanDao {
 
     }
 
-    /*
+/*
     private RowMapper<GetPlanInfo> planInfoRowMapper(){
         return new RowMapper<GetPlanInfo>() {
             @Override
@@ -135,6 +138,7 @@ public class PlanDao {
             }
         };
     }
+
 
     private RowMapper<Interest> InterestRowMapper(){
         return new RowMapper<Interest>() {
