@@ -1,12 +1,15 @@
 package com.api.bizta.Event;
 
 import com.api.bizta.Event.model.GetEventInfo;
+import com.api.bizta.Event.model.GetEventsInfo;
 import com.api.bizta.Place.model.GetPlaceInfo;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.api.bizta.config.BaseResponseStatus.*;
 
@@ -50,10 +53,26 @@ public class EventProvider {
         }
     }
 
+    public int checkDuplicateTimeNotEventIdx(int eventIdx, int planIdx, int userIdx, String date, String startTime, String endTime) throws BaseException {
+        try{
+            return eventDao.checkDuplicateTimeNotEventIdx(eventIdx, planIdx, userIdx, date, startTime, endTime);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public int checkEventExist(int eventIdx) throws BaseException{
         try{
             return eventDao.checkEventExist(eventIdx);
         } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetEventsInfo> getEventsInfo(int planIdx) throws BaseException{
+        try{
+            return eventDao.getEventsInfo(planIdx);
+        }catch (Exception e){
             throw new BaseException(DATABASE_ERROR);
         }
     }

@@ -17,5 +17,6 @@ public class GetPlaceInfo {
     private String address;
     private String description;
     private float grade;
+//    private boolean favoriteCnt;
     private int reviewCnt;
 }

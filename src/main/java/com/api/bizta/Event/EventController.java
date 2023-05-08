@@ -1,10 +1,13 @@
 package com.api.bizta.Event;
 
 import com.api.bizta.Event.model.*;
+import com.api.bizta.Place.model.GetPlaces;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.api.bizta.config.BaseResponseStatus.*;
 
@@ -23,7 +26,7 @@ public class EventController {
     }
 
     @ResponseBody
-    @PostMapping("")
+    @PostMapping
     public BaseResponse<PostEventRes> makeEvent(@RequestBody PostEventReq postEventReq){
 
         try{
@@ -53,12 +56,16 @@ public class EventController {
     public BaseResponse<GetEventInfo> getEventInfo(@PathVariable("eventIdx") int eventIdx) {
         try {
             GetEventInfo eventInfo = eventProvider.getEventInfo(eventIdx);
+            if(eventInfo.getUserIdx() != jwtService.getUserIdx()){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             return new BaseResponse<>(eventInfo);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
     }
 
+    // event 수정
     @ResponseBody
     @PatchMapping("/{eventIdx}")
     public BaseResponse<String> modifyEvent(@PathVariable("eventIdx") int eventIdx, @RequestBody PatchEventReq patchEventReq){
@@ -67,18 +74,44 @@ public class EventController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            if (patchEventReq.getTitle().isBlank()) {
-                return new BaseResponse<>(EMPTY_TITLE);
-            }
-
-            if(patchEventReq.getDate().isBlank()){
-                return new BaseResponse<>(EMPTY_DATE);
-            }
-
             String eventRes = eventService.modifyEvent(eventIdx, patchEventReq);
             return new BaseResponse<>(eventRes);
         }catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    // event 삭제
+    @ResponseBody
+    @PatchMapping("/{eventIdx}/status")
+    public BaseResponse<String> deleteEvent(@PathVariable("eventIdx") int eventIdx){
+
+        try{
+            int userIdx = eventProvider.getEventInfo(eventIdx).getUserIdx();
+            if(userIdx != jwtService.getUserIdx()){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            String deleteRes = eventService.deleteEvent(eventIdx);
+            return new BaseResponse<>(deleteRes);
+        }catch (BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    // event 전체 조회
+    @ResponseBody
+    @GetMapping
+    public BaseResponse<List<GetEventsInfo>> getEventsInfo(@RequestParam int planIdx){
+        try{
+            List<GetEventsInfo> eventsInfo = eventProvider.getEventsInfo(planIdx);
+            if(eventsInfo.get(0).getUserIdx() != jwtService.getUserIdx()){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            return new BaseResponse<>(eventsInfo);
+        }catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
 }

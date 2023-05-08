@@ -22,16 +22,6 @@ public enum BaseResponseStatus {
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
     INVALID_USER_JWT(false,2003,"권한이 없는 유저의 접근입니다."),
 
-//    users
-//    USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
-//    USERS_EXISTS_USER_ID(false,2011,"중복된 아이디입니다."),
-//    INVALID_AUTH(false, 2005, "유효하지 않은 회원 정보입니다."),
-//    USERS_EXISTS_USER_NAME(false,2012,"중복된 닉네임입니다."),
-//    USERS_EMPTY_USER_NAME(false,2013,"유저 닉네임을 입력해주세요."),
-//
-//    USERS_EMPTY_USER_EMAIL(false, 2014, "유저 이메일 값을 확인해주세요."),
-//    POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
-
 
     // user 회원가입
     EMPTY_ID(false,2004, "아이디를 입력해주세요."),
@@ -45,10 +35,16 @@ public enum BaseResponseStatus {
     EMPTY_PASSWORD(false,2012, "비밀번호를 입력해주세요."),
     INVALID_PASSWORD(false,2013, "비밀번호 형식을 확인해주세요."),
 
-    // event 생성
+    // event
     EMPTY_TITLE(false, 2014, "이벤트 제목을 입력해주세요."),
     EMPTY_DATE(false, 2015, "이벤트 날짜를 입력해주세요."),
     DUPLICATE_TIME(false, 2016, "같은 날에 중복되는 시간이 있습니다."),
+    DELETE_FAIL_EVENT(false, 2017, "이벤트 삭제에 실패했습니다."),
+
+    // review
+    EMPTY_RATING(false, 2018, "1점부터 5점까지 평점을 매겨주세요."),
+    EMPTY_CONTENT(false, 2019, "리뷰를 입력해주세요."),
+    ALREADY_WRITTEN(false, 2020, "이미 리뷰를 작성하셨습니다."),
 
 
 

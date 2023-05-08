@@ -7,10 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class GetReviewInfo {
+public class PostReviewRes {
     private int reviewIdx;
-    private int userIdx;
-
 }

@@ -6,6 +6,7 @@ import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.result.view.RedirectView;
 
 import static com.api.bizta.config.BaseResponseStatus.*;
 import static com.api.bizta.utils.ValidationRegex.isRegexEmail;
@@ -76,14 +77,11 @@ public class UserController {
 
     // google login
     @GetMapping("/{method}/google")
-    public String googleLoginUri(@PathVariable String method){
+    public RedirectView googleLoginUri(@PathVariable String method){
         String url = "https://accounts.google.com/o/oauth2/auth?client_id=356448383900-kt44mvojcmdqji36q3ad66r8gtp6am5r.apps.googleusercontent.com&";
-        if(method.equals("login")){
-            url += "redirect_uri=http://localhost:8080/users/login/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
-        }else{
-            url += "redirect_uri=http://localhost:8080/users/auth/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
-        }
-        return url;
+        url += "redirect_uri=http://localhost:8080/users/" + method + "/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
+
+        return new RedirectView(url);
     }
 
     // google login
