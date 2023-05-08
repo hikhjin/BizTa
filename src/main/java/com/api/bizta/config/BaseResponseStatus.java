@@ -22,7 +22,6 @@ public enum BaseResponseStatus {
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
     INVALID_USER_JWT(false,2003,"권한이 없는 유저의 접근입니다."),
 
-
     // user 회원가입
     EMPTY_ID(false,2004, "아이디를 입력해주세요."),
     EXISTS_ID(false,2005,"중복된 아이디입니다."),
@@ -45,6 +44,10 @@ public enum BaseResponseStatus {
     EMPTY_RATING(false, 2018, "1점부터 5점까지 평점을 매겨주세요."),
     EMPTY_CONTENT(false, 2019, "리뷰를 입력해주세요."),
     ALREADY_WRITTEN(false, 2020, "이미 리뷰를 작성하셨습니다."),
+
+
+    // plan
+    DELETE_FAIL_PLAN(false, 2100, "plan 삭제에 실패하였습니다."),
 
 
 
