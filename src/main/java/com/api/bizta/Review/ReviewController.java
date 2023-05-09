@@ -1,9 +1,6 @@
 package com.api.bizta.Review;
 
-import com.api.bizta.Review.model.GetReviewsInfo;
-import com.api.bizta.Review.model.PatchReviewReq;
-import com.api.bizta.Review.model.PostReviewReq;
-import com.api.bizta.Review.model.PostReviewRes;
+import com.api.bizta.Review.model.*;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
@@ -30,19 +27,19 @@ public class ReviewController {
         this.jwtService = jwtService;
     }
 
-    // 리뷰 전체 조회(/reviews/1?sort=latest&order=descending) 이런식으로 호출
-    @ResponseBody
-    @GetMapping("/{placeIdx}")
-    public BaseResponse<List<GetReviewsInfo>> getReviewsInfo(@PathVariable("placeIdx") int placeIdx, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "descending") String order){
-        try{
-            List<GetReviewsInfo> reviewInfos = reviewProvider.getReviewsInfo(placeIdx, sort, order);
-
-            return new BaseResponse<>(reviewInfos);
-
-        }catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
+//    // 리뷰 전체 조회(/reviews/1?sort=latest&order=descending) 이런식으로 호출
+//    @ResponseBody
+//    @GetMapping("/{placeIdx}")
+//    public BaseResponse<List<GetReviewsInfo>> getReviewsInfo(@PathVariable("placeIdx") int placeIdx, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "descending") String order){
+//        try{
+//            List<GetReviewsInfo> reviewInfos = reviewProvider.getReviewsInfo(placeIdx, sort, order);
+//
+//            return new BaseResponse<>(reviewInfos);
+//
+//        }catch(BaseException exception){
+//            return new BaseResponse<>((exception.getStatus()));
+//        }
+//    }
 
     @ResponseBody
     @PostMapping("/{placeIdx}")
@@ -71,13 +68,14 @@ public class ReviewController {
     // review 수정
     @ResponseBody
     @PatchMapping("/{reviewIdx}")
-    public BaseResponse<String> modifyReview(@PathVariable("placeIdx") int placeIdx, @PathVariable("reviewIdx") int reviewIdx, @RequestBody PatchReviewReq patchReviewReq){
+    public BaseResponse<String> modifyReview(@PathVariable("reviewIdx") int reviewIdx, @RequestBody PatchReviewReq patchReviewReq){
         try{
             if(patchReviewReq.getUserIdx() != jwtService.getUserIdx()){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            String reviewRes = reviewService.modifyReview(reviewIdx, placeIdx, patchReviewReq);
+            GetReviewInfo getReviewInfo = reviewProvider.getReviewInfo(reviewIdx);
+            String reviewRes = reviewService.modifyReview(reviewIdx, getReviewInfo.getPlaceIdx(), patchReviewReq);
             return new BaseResponse<>(reviewRes);
         }catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
@@ -87,14 +85,14 @@ public class ReviewController {
     // review 삭제
     @ResponseBody
     @PatchMapping("/{reviewIdx}/status")
-    public BaseResponse<String> deleteReview(@PathVariable("placeIdx") int placeIdx, @PathVariable("reviewIdx") int reviewIdx){
+    public BaseResponse<String> deleteReview(@PathVariable("reviewIdx") int reviewIdx){
         try{
-            int userIdx = reviewProvider.getReviewInfo(reviewIdx).getUserIdx();
-            if(userIdx != jwtService.getUserIdx()){
+            GetReviewInfo getReviewInfo = reviewProvider.getReviewInfo(reviewIdx);
+            if(getReviewInfo.getUserIdx() != jwtService.getUserIdx()){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
 
-            String deleteRes = reviewService.deleteReview(reviewIdx, placeIdx);
+            String deleteRes = reviewService.deleteReview(reviewIdx, getReviewInfo.getPlaceIdx());
             return new BaseResponse<>(deleteRes);
         }catch (BaseException e){
             return new BaseResponse<>(e.getStatus());

@@ -1,7 +1,6 @@
 package com.api.bizta.Review;
 
 import com.api.bizta.Review.model.GetReviewInfo;
-import com.api.bizta.Review.model.GetReviewsInfo;
 import com.api.bizta.Review.model.PatchReviewReq;
 import com.api.bizta.Review.model.PostReviewReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +22,23 @@ public class ReviewDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<GetReviewsInfo> getReviewsInfo(int placeIdx){
-        String getReviewInfosQuery =
-                "select r.placeIdx, r.reviewIdx, u.nickName, r.rating, r.content from Review r " +
-                        "join User u on r.userIdx = u.userIdx " +
-                        "where placeIdx = ? and r.status = 'active';";
-
-        try{
-            List<GetReviewsInfo> reviews = this.jdbcTemplate.query(getReviewInfosQuery, reviewInfosRowMapper(), placeIdx);
-            return reviews;
-        }catch(EmptyResultDataAccessException e){
-            return null;
-        }
-    }
+//    public List<GetReviewsInfo> getReviewsInfo(int placeIdx){
+//        String getReviewInfosQuery =
+//                "select r.placeIdx, r.reviewIdx, u.nickName, r.rating, r.content from Review r " +
+//                        "join User u on r.userIdx = u.userIdx " +
+//                        "where placeIdx = ? and r.status = 'active';";
+//
+//        try{
+//            List<GetReviewsInfo> reviews = this.jdbcTemplate.query(getReviewInfosQuery, reviewInfosRowMapper(), placeIdx);
+//            return reviews;
+//        }catch(EmptyResultDataAccessException e){
+//            return null;
+//        }
+//    }
 
     public GetReviewInfo getReviewInfo(int reviewIdx){
         String getReviewInfoQuery =
-                "select userIdx from Review where reviewIdx = ? and status = 'active'";
+                "select userIdx, placeIdx from Review where reviewIdx = ? and status = 'active'";
 
         try{
             GetReviewInfo reviewInfo = this.jdbcTemplate.queryForObject(getReviewInfoQuery, reviewInfoRowMapper(), reviewIdx);
@@ -49,22 +48,23 @@ public class ReviewDao {
         }
     }
 
-    private RowMapper<GetReviewsInfo> reviewInfosRowMapper(){
-        return (rs, rowNum) -> {
-            GetReviewsInfo reviewInfo = new GetReviewsInfo();
-            reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
-            reviewInfo.setReviewIdx(rs.getInt("reviewIdx"));
-            reviewInfo.setNickName(rs.getString("nickName"));
-            reviewInfo.setRating(rs.getFloat("rating"));
-            reviewInfo.setContent(rs.getString("content"));
-            return reviewInfo;
-        };
-    }
+//    private RowMapper<GetReviewsInfo> reviewInfosRowMapper(){
+//        return (rs, rowNum) -> {
+//            GetReviewsInfo reviewInfo = new GetReviewsInfo();
+//            reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
+//            reviewInfo.setReviewIdx(rs.getInt("reviewIdx"));
+//            reviewInfo.setNickName(rs.getString("nickName"));
+//            reviewInfo.setRating(rs.getFloat("rating"));
+//            reviewInfo.setContent(rs.getString("content"));
+//            return reviewInfo;
+//        };
+//    }
 
     private RowMapper<GetReviewInfo> reviewInfoRowMapper(){
         return (rs, rowNum) -> {
             GetReviewInfo reviewInfo = new GetReviewInfo();
             reviewInfo.setUserIdx(rs.getInt("userIdx"));
+            reviewInfo.setPlaceIdx(rs.getInt("placeIdx"));
             return reviewInfo;
         };
     }

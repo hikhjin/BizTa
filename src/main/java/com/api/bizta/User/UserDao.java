@@ -31,10 +31,10 @@ public class UserDao {
     // userIdx가 자꾸 1로 나와서 우선 코드 수정
     public int createUser(PostUserReq postUserReq) {
         String createUserQuery = "insert into User " +
-                "(id, nickName, password, email, birth) " +
-                "values (?,?,?,?,?); ";
+                "(id, nickName, password, email, birth, country) " +
+                "values (?,?,?,?,?,?); ";
         Object[] createUserParams = new Object[]{postUserReq.getId(), postUserReq.getNickName(),
-                postUserReq.getPassword(), postUserReq.getEmail(), postUserReq.getBirth()};
+                postUserReq.getPassword(), postUserReq.getEmail(), postUserReq.getBirth(), postUserReq.getCountry()};
         this.jdbcTemplate.update(createUserQuery, createUserParams);
 
         String lastInsertIdxQuery = "select last_insert_id()";

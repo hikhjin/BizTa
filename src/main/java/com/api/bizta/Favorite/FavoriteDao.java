@@ -86,13 +86,13 @@ public class FavoriteDao {
                     "FROM Favorite f " +
                     "INNER JOIN Place p ON p.placeIdx = f.placeIdx " +
                     "WHERE f.userIdx = ? " +
-                    "ORDER BY p.reviewCnt DESC;";
+                    "ORDER BY f.createdAt DESC;";
         }else{
             getFavoritesQuery = "SELECT p.placeIdx, p.name, p.imgUrl, p.reviewCnt, p.grade, f.createdAt " +
                     "FROM Favorite f " +
                     "INNER JOIN Place p ON p.placeIdx = f.placeIdx " +
                     "WHERE f.userIdx = ? " +
-                    "ORDER BY f.createdAt DESC;";
+                    "ORDER BY p.grade DESC;";
         }
 
         try {
