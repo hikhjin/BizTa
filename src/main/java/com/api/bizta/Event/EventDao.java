@@ -73,18 +73,11 @@ public class EventDao {
                 "AND date = ? " +
                 "AND status = 'active' " +
                 "AND eventIdx != ? " +
-                "AND EXISTS (" +
-                "SELECT 1 " +
-                "FROM Event " +
-                "WHERE planIdx = ? " +
-                "AND userIdx = ? " +
-                "AND date = ? " +
                 "AND ((startTime <= ? AND ? < endTime) OR " +
                 "(startTime < ? AND ? <= endTime) OR " +
-                "(? <= startTime AND endTime <= ?)) " +
-                ")";
+                "(? <= startTime AND endTime <= ?))";
 
-        Object[] checkDuplicateTimeNotEventIdxParams = new Object[]{planIdx, userIdx, date, eventIdx, planIdx, userIdx, date, startTime, startTime, endTime, endTime, startTime, endTime};
+        Object[] checkDuplicateTimeNotEventIdxParams = new Object[]{planIdx, userIdx, date, eventIdx, startTime, startTime, endTime, endTime, startTime, endTime};
 
         return this.jdbcTemplate.queryForObject(checkDuplicateTimeNotEventIdxQuery,
                 int.class,

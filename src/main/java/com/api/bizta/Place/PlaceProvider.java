@@ -59,4 +59,32 @@ public class PlaceProvider {
         if(placeReservation == null) throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
         return placeReservation;
     }
+
+    public List<GetPlaceReview> getPlaceReview(int placeIdx) throws BaseException {
+
+        List<GetPlaceReview> placeReview;
+        try {
+            placeReview = placeDao.getPlaceReview(placeIdx);
+        }
+        catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+        return placeReview;
+    }
+
+    public GetPlaceMap getPlaceMap(int placeIdx) throws BaseException {
+
+        GetPlaceMap placeMap;
+        try {
+            placeMap = placeDao.getPlaceMap(placeIdx);
+        }
+        catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+        if(placeMap == null) throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
+        return placeMap;
+    }
 }

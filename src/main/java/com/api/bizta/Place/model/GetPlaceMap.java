@@ -1,4 +1,4 @@
-package com.api.bizta.Review.model;
+package com.api.bizta.Place.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetReviewInfo {
-    private int reviewIdx;
-    private int userIdx;
+public class GetPlaceMap {
     private int placeIdx;
-
+    private String address;
+    private float lat;
+    private float lon;
+//    private String key;
 }

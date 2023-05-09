@@ -1,7 +1,6 @@
 package com.api.bizta.Favorite;
 
 import com.api.bizta.Favorite.model.GetFavoritesInfo;
-import com.api.bizta.Favorite.model.PostFavoriteReq;
 import com.api.bizta.Place.model.GetPlaces;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
@@ -28,13 +27,13 @@ public class FavoriteController {
     }
 
     @ResponseBody
-    @PostMapping("/{placeIdx}")
-    public BaseResponse<String> clickFavorite(@PathVariable("placeIdx") int placeIdx, @RequestBody PostFavoriteReq postFavoriteReq){
+    @PostMapping("/{userIdx}")
+    public BaseResponse<String> clickFavorite(@PathVariable("userIdx") int userIdx, @RequestParam int placeIdx){
         try {
-            if(postFavoriteReq.getUserIdx() != jwtService.getUserIdx()){
+            if(userIdx != jwtService.getUserIdx()){
                 return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // jwt 확인
             }
-            String favoriteRes = favoriteService.clickFavorite(placeIdx, postFavoriteReq.getUserIdx());
+            String favoriteRes = favoriteService.clickFavorite(placeIdx, userIdx);
             return new BaseResponse<>(favoriteRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

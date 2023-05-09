@@ -6,11 +6,14 @@ import com.api.bizta.config.BaseResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/places")
 public class PlaceController {
+
+    private String apiKey = "AIzaSyDjQwiz2pO8MaE6Y6mC_PllLyloxVTHG_E";
     @Autowired
     private final PlaceProvider placeProvider;
     private final PlaceService placeService;
@@ -49,6 +52,29 @@ public class PlaceController {
         try {
             GetPlaceReservation placeReservation = placeProvider.getPlaceReservation(placeIdx);
             return new BaseResponse<>(placeReservation);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/{placeIdx}/review")
+    public BaseResponse<List<GetPlaceReview>> getPlaceReview(@PathVariable("placeIdx") int placeIdx) {
+        try {
+            List<GetPlaceReview> placeReview = placeProvider.getPlaceReview(placeIdx);
+            return new BaseResponse<>(placeReview);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/{placeIdx}/map")
+    public BaseResponse<GetPlaceMap> getPlaceMap(@PathVariable("placeIdx") int placeIdx) {
+        try {
+            GetPlaceMap placeMap = placeProvider.getPlaceMap(placeIdx);
+
+            return new BaseResponse<>(placeMap);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

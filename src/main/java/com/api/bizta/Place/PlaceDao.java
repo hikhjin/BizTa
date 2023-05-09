@@ -75,6 +75,37 @@ public class PlaceDao {
 
     }
 
+    public List<GetPlaceReview> getPlaceReview(int placeIdx) {
+
+        String getPlaceReviewQuery =
+
+        "select r.reviewIdx, r.placeIdx, u.nickName, r.rating, r.content " +
+                "from Review r " +
+                "join User u on r.userIdx = u.userIdx " +
+                "where r.placeIdx = ?";
+
+        try {
+            return this.jdbcTemplate.query(getPlaceReviewQuery, placeReviewRowMapper(), placeIdx);
+        } catch (EmptyResultDataAccessException e) { // 쿼리문에 해당하는 결과가 없을 때
+            return null;
+        }
+
+    }
+
+    public GetPlaceMap getPlaceMap(int placeIdx) {
+
+        String getPlaceMapQuery =
+                "select placeIdx, address, lat, lon from Place " +
+                        "where placeIdx = ? and status = 'active';";
+
+        try {
+            return this.jdbcTemplate.queryForObject(getPlaceMapQuery, placeMapRowMapper(), placeIdx);
+        } catch (EmptyResultDataAccessException e) { // 쿼리문에 해당하는 결과가 없을 때
+            return null;
+        }
+
+    }
+
     private RowMapper<GetPlaces> placesRowMapper(){
         return new RowMapper<GetPlaces>() {
             @Override
@@ -117,6 +148,35 @@ public class PlaceDao {
                 placeReservation.setSiteUrl(rs.getString("siteUrl"));
                 placeReservation.setContact(rs.getString("contact"));
                 return placeReservation;
+            }
+        };
+    }
+
+    private RowMapper<GetPlaceReview> placeReviewRowMapper(){
+        return new RowMapper<GetPlaceReview>() {
+            @Override
+            public GetPlaceReview mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetPlaceReview placeReview = new GetPlaceReview();
+                placeReview.setReviewIdx(rs.getInt("reviewIdx"));
+                placeReview.setPlaceIdx(rs.getInt("placeIdx"));
+                placeReview.setNickName(rs.getString("nickName"));
+                placeReview.setRating(rs.getFloat("rating"));
+                placeReview.setContent(rs.getString("content"));
+                return placeReview;
+            }
+        };
+    }
+
+    private RowMapper<GetPlaceMap> placeMapRowMapper(){
+        return new RowMapper<GetPlaceMap>() {
+            @Override
+            public GetPlaceMap mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetPlaceMap placeMap = new GetPlaceMap();
+                placeMap.setPlaceIdx(rs.getInt("placeIdx"));
+                placeMap.setAddress(rs.getString("address"));
+                placeMap.setLat(rs.getFloat("lat"));
+                placeMap.setLon(rs.getFloat("lon"));
+                return placeMap;
             }
         };
     }

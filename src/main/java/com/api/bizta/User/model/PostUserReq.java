@@ -10,5 +10,6 @@ public class PostUserReq {
     private String password;
     private String email;
     private String birth;
+    private String country;
     //private int emailCheck;
 }
