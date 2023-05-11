@@ -5,6 +5,8 @@ import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -27,75 +29,64 @@ public class ReviewController {
         this.jwtService = jwtService;
     }
 
-//    // 리뷰 전체 조회(/reviews/1?sort=latest&order=descending) 이런식으로 호출
-//    @ResponseBody
-//    @GetMapping("/{placeIdx}")
-//    public BaseResponse<List<GetReviewsInfo>> getReviewsInfo(@PathVariable("placeIdx") int placeIdx, @RequestParam(defaultValue = "latest") String sort, @RequestParam(defaultValue = "descending") String order){
-//        try{
-//            List<GetReviewsInfo> reviewInfos = reviewProvider.getReviewsInfo(placeIdx, sort, order);
-//
-//            return new BaseResponse<>(reviewInfos);
-//
-//        }catch(BaseException exception){
-//            return new BaseResponse<>((exception.getStatus()));
-//        }
-//    }
-
     @ResponseBody
     @PostMapping("/{placeIdx}")
-    public BaseResponse<PostReviewRes> makeReview(@PathVariable("placeIdx") int placeIdx, @RequestBody PostReviewReq postReviewReq){
+    public ResponseEntity<PostReviewRes> makeReview(@PathVariable("placeIdx") int placeIdx, @RequestBody PostReviewReq postReviewReq){
         try{
             if(jwtService.getUserIdx() != postReviewReq.getUserIdx()){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
 
             if(postReviewReq.getRating() == 0){
-                return new BaseResponse<>(EMPTY_RATING);
+                return ResponseEntity.status(EMPTY_RATING.getCode()).build();
             }
 
             if(postReviewReq.getContent().isBlank()){
-                return new BaseResponse<>(EMPTY_CONTENT);
+                return ResponseEntity.status(EMPTY_CONTENT.getCode()).build();
             }
 
             PostReviewRes reviewRes = reviewService.makeReview(placeIdx, postReviewReq);
-            return new BaseResponse<>(reviewRes);
+            return new ResponseEntity<>(reviewRes, HttpStatus.OK);
 
         }catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // review 수정
     @ResponseBody
     @PatchMapping("/{reviewIdx}")
-    public BaseResponse<String> modifyReview(@PathVariable("reviewIdx") int reviewIdx, @RequestBody PatchReviewReq patchReviewReq){
+    public ResponseEntity<String> modifyReview(@PathVariable("reviewIdx") int reviewIdx, @RequestBody PatchReviewReq patchReviewReq){
         try{
             if(patchReviewReq.getUserIdx() != jwtService.getUserIdx()){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
 
             GetReviewInfo getReviewInfo = reviewProvider.getReviewInfo(reviewIdx);
             String reviewRes = reviewService.modifyReview(reviewIdx, getReviewInfo.getPlaceIdx(), patchReviewReq);
-            return new BaseResponse<>(reviewRes);
-        }catch (BaseException exception){
-            return new BaseResponse<>(exception.getStatus());
+            return new ResponseEntity<>(reviewRes, HttpStatus.OK);
+        }catch (BaseException e){
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // review 삭제
     @ResponseBody
     @PatchMapping("/{reviewIdx}/status")
-    public BaseResponse<String> deleteReview(@PathVariable("reviewIdx") int reviewIdx){
+    public ResponseEntity<String> deleteReview(@PathVariable("reviewIdx") int reviewIdx){
         try{
             GetReviewInfo getReviewInfo = reviewProvider.getReviewInfo(reviewIdx);
             if(getReviewInfo.getUserIdx() != jwtService.getUserIdx()){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
 
             String deleteRes = reviewService.deleteReview(reviewIdx, getReviewInfo.getPlaceIdx());
-            return new BaseResponse<>(deleteRes);
+            return new ResponseEntity<>(deleteRes, HttpStatus.OK);
         }catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 }

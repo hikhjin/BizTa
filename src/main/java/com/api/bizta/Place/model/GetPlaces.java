@@ -12,8 +12,12 @@ import lombok.Setter;
 public class GetPlaces {
     private int placeIdx;
     private String name;
+    private String category;
     private String imgUrl;
+    private String address;
+    private String description;
     private float grade;
 //    private boolean favoriteCnt;
     private int reviewCnt;
+
 }

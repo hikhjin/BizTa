@@ -6,6 +6,8 @@ import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.config.BaseResponseStatus;
 import com.api.bizta.utils.JwtService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,32 +30,34 @@ public class FavoriteController {
 
     @ResponseBody
     @PostMapping("/{userIdx}")
-    public BaseResponse<String> clickFavorite(@PathVariable("userIdx") int userIdx, @RequestParam int placeIdx){
+    public ResponseEntity<String> clickFavorite(@PathVariable("userIdx") int userIdx, @RequestParam int placeIdx){
         try {
             if(userIdx != jwtService.getUserIdx()){
-                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // jwt 확인
+
             }
             String favoriteRes = favoriteService.clickFavorite(placeIdx, userIdx);
-            return new BaseResponse<>(favoriteRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
+            return new ResponseEntity<>(favoriteRes, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // userIdx를 어떤식으로 요청할까
     @ResponseBody
     @GetMapping("/{userIdx}")
-    public BaseResponse<List<GetFavoritesInfo>> getFavorites(@PathVariable("userIdx") int userIdx, @RequestParam(required = false, defaultValue = "latest") String sort){
+    public ResponseEntity<List<GetFavoritesInfo>> getFavorites(@PathVariable("userIdx") int userIdx, @RequestParam(required = false, defaultValue = "latest") String sort){
         try{
             if(userIdx != jwtService.getUserIdx()){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
 
             List<GetFavoritesInfo> favorites = favoriteProvider.getFavorites(userIdx, sort);
 
-            return new BaseResponse<>(favorites);
-        }catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
+            return new ResponseEntity<>(favorites, HttpStatus.OK);
+        }catch(BaseException e){
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 }
