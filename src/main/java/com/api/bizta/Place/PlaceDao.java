@@ -25,10 +25,10 @@ public class PlaceDao {
 
         String getPlacesQuery;
         if(category.equals("")){
-            getPlacesQuery = "select placeIdx, name, imgUrl, grade, reviewCnt " +
+            getPlacesQuery = "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt " +
                     "from Place where status = 'active';";
         }else{
-            getPlacesQuery = "select placeIdx, name, imgUrl, grade, reviewCnt " +
+            getPlacesQuery = "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt " +
                     "from Place where category = ? and status = 'active'";
         }
 
@@ -113,7 +113,10 @@ public class PlaceDao {
                 GetPlaces places = new GetPlaces();
                 places.setPlaceIdx(rs.getInt("placeIdx"));
                 places.setName(rs.getString("name"));
+                places.setCategory(rs.getString("category"));
                 places.setImgUrl(rs.getString("imgUrl"));
+                places.setAddress(rs.getString("address"));
+                places.setDescription(rs.getString("description"));
                 places.setGrade(rs.getFloat("grade"));
                 places.setReviewCnt(rs.getInt("reviewCnt"));
                 return places;

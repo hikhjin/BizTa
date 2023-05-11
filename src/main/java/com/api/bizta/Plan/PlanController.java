@@ -5,7 +5,11 @@ import com.api.bizta.config.BaseResponse;
 import com.api.bizta.config.BaseResponseStatus;
 import com.api.bizta.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.api.bizta.config.BaseResponseStatus.INVALID_USER_JWT;
 
 @RestController
 @RequestMapping("/plans")
@@ -26,41 +30,43 @@ public class PlanController {
     // plan 추가
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<PostPlanRes> createPlan(@RequestBody PlanInfo planInfo) {
+    public ResponseEntity<PostPlanRes> createPlan(@RequestBody PlanInfo planInfo) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if(planInfo.getUserIdx() != userIdxByJwt){
-                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // jwt 확인
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
 
             PostPlanRes postPlanRes = planService.createPlan(planInfo.getUserIdx(), planInfo);
-            return new BaseResponse<>(postPlanRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
+            return new ResponseEntity<>(postPlanRes, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // plan 수정
     @ResponseBody
     @PatchMapping("/{planIdx}")
-    public BaseResponse<String> modifyPlan(@RequestBody PatchPlanReq patchPlansReq) {
+    public ResponseEntity<String> modifyPlan(@RequestBody PatchPlanReq patchPlansReq) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if(patchPlansReq.getUserIdx() != userIdxByJwt){
-                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT); // jwt 확인
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
             planService.modifyPlan(patchPlansReq.getPlanIdx(), patchPlansReq);
             String result = "Successfully modified plan.";
-            return new BaseResponse<>(result);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // plan 삭제
     @ResponseBody
     @PatchMapping("/{planIdx}/status")
-    public BaseResponse<String> deletePlan(@PathVariable("planIdx") int planIdx) {
+    public ResponseEntity<String> deletePlan(@PathVariable("planIdx") int planIdx) {
         try{
             /*
             int userIdxByJwt = jwtService.getUserIdx();
@@ -72,21 +78,23 @@ public class PlanController {
 
             planService.deletePlan(planIdx);
             String result = "Successfully deleted plan.";
-            return new BaseResponse<>(result);
-        } catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch(BaseException e){
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // 특정 plan 조회
     @ResponseBody
     @GetMapping("/{planIdx}")
-    public BaseResponse<GetPlanInfo> getPlanInfo(@PathVariable ("planIdx") int planIdx) {
+    public ResponseEntity<GetPlanInfo> getPlanInfo(@PathVariable ("planIdx") int planIdx) {
         try {
             GetPlanInfo getPlanInfo = planProvider.getPlanInfo(planIdx);
-            return new BaseResponse<>(getPlanInfo);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
+            return new ResponseEntity<>(getPlanInfo, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 

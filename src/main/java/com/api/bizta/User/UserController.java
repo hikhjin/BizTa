@@ -5,6 +5,8 @@ import com.api.bizta.User.model.*;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.result.view.RedirectView;
 
@@ -28,50 +30,52 @@ public class UserController {
     // 유저 회원가입
     @ResponseBody
     @PostMapping("/sign-up")
-    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
+    public ResponseEntity<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         // 이메일 빈칸 확인
         if (postUserReq.getEmail() == null) {
-            return new BaseResponse<>(EMPTY_EMAIL);
+            return ResponseEntity.status(EMPTY_EMAIL.getCode()).build();
         }
         // 아이디 빈칸 확인
         if (postUserReq.getId() == null) {
-            return new BaseResponse<>(EMPTY_ID);
+            return ResponseEntity.status(EMPTY_ID.getCode()).build();
         }
         // 닉네임 빈칸 확인
         if (postUserReq.getNickName() == null) {
-            return new BaseResponse<>(EMPTY_NICKNAME);
+            return ResponseEntity.status(EMPTY_NICKNAME.getCode()).build();
         }
         // 비밀번호 빈칸 확인
         if (postUserReq.getPassword() == null) {
-            return new BaseResponse<>(EMPTY_PASSWORD);
+            return ResponseEntity.status(EMPTY_PASSWORD.getCode()).build();
         }
         // 이메일 정규표현식 확인 ( email@~.~ )
         if (!isRegexEmail(postUserReq.getEmail())) {
-            return new BaseResponse<>(INVALID_EMAIL);
+            return ResponseEntity.status(INVALID_EMAIL.getCode()).build();
         }
 
         // 이메일 중복 확인은 [Service - Provider - Dao] 에서 합니다.
         try {
             PostUserRes postUserRes;
             postUserRes = userService.createUser(postUserReq);
-            return new BaseResponse<>(postUserRes);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
+            return new ResponseEntity<>(postUserRes, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // 일반 login
     @ResponseBody
     @PostMapping("/log-in")
-    public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
+    public ResponseEntity<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
         try {
             if (postLoginReq.getId() == null || postLoginReq.getPassword() == null) {
-                return new BaseResponse<>(FAILED_TO_LOGIN);
+                return ResponseEntity.status(FAILED_TO_LOGIN.getCode()).build();
             }
             PostLoginRes loginUser = userService.login(postLoginReq);
-            return new BaseResponse<>(loginUser);
+            return new ResponseEntity<>(loginUser, HttpStatus.OK);
         } catch (BaseException e) {
-            return new BaseResponse<>(e.getStatus());
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
@@ -86,7 +90,7 @@ public class UserController {
 
     // google login
     @GetMapping(value = "/{method}/oauth2/code/{registrationId}", produces = "application/json")
-    public BaseResponse<PostLoginRes> oauthLogin (@PathVariable String method, @RequestParam String code, @PathVariable String registrationId) {
+    public ResponseEntity<PostLoginRes> oauthLogin (@PathVariable String method, @RequestParam String code, @PathVariable String registrationId) {
         GetGoogleInfo getGoogleInfo = userProvider.getGoogleInfo(method, code, registrationId);
 
         PostLoginRes postLoginRes;
@@ -95,13 +99,14 @@ public class UserController {
             try {
                 postLoginRes = userService.login(postLoginReq);
                 postLoginRes.setGetTokenRes(getGoogleInfo.getGetTokenRes());
-                return new BaseResponse<>(postLoginRes);
+                return new ResponseEntity<>(postLoginRes, HttpStatus.OK);
             } catch (BaseException e) {
-                return new BaseResponse<>(e.getStatus());
+                HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+                return ResponseEntity.status(httpStatus).build();
             }
         }
 
         postLoginRes = new PostLoginRes(getGoogleInfo.getId(), getGoogleInfo.getPassword(), getGoogleInfo.getEmail(), getGoogleInfo.getNickName(), getGoogleInfo.getGetTokenRes());
-        return new BaseResponse<>(postLoginRes);
+        return new ResponseEntity<>(postLoginRes, HttpStatus.OK);
     }
 }

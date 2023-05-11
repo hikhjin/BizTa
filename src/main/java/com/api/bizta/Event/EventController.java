@@ -5,6 +5,8 @@ import com.api.bizta.Place.model.GetPlaces;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,89 +29,95 @@ public class EventController {
 
     @ResponseBody
     @PostMapping
-    public BaseResponse<PostEventRes> makeEvent(@RequestBody PostEventReq postEventReq){
+    public ResponseEntity<PostEventRes> makeEvent(@RequestBody PostEventReq postEventReq){
 
         try{
             if(postEventReq.getUserIdx() != jwtService.getUserIdx()){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
 
             if (postEventReq.getTitle().isBlank()) {
-                return new BaseResponse<>(EMPTY_TITLE);
+                return ResponseEntity.status(EMPTY_TITLE.getCode()).build();
             }
 
             if(postEventReq.getDate().isBlank()){
-                return new BaseResponse<>(EMPTY_DATE);
+                return ResponseEntity.status(EMPTY_DATE.getCode()).build();
             }
 
             // 중복되는 시간 있는지 확인하는 로직은 안에
             PostEventRes postEventRes = eventService.makeEvent(postEventReq);
-            return new BaseResponse<>(postEventRes);
-        }catch (BaseException exception){
-            return new BaseResponse<>(exception.getStatus());
+
+            return new ResponseEntity<>(postEventRes, HttpStatus.OK);
+        }catch (BaseException e){
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // 이벤트 조회
     @ResponseBody
     @GetMapping("/{eventIdx}")
-    public BaseResponse<GetEventInfo> getEventInfo(@PathVariable("eventIdx") int eventIdx) {
+    public ResponseEntity<GetEventInfo> getEventInfo(@PathVariable("eventIdx") int eventIdx) {
         try {
             GetEventInfo eventInfo = eventProvider.getEventInfo(eventIdx);
             if(eventInfo.getUserIdx() != jwtService.getUserIdx()){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
-            return new BaseResponse<>(eventInfo);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
+            return new ResponseEntity<>(eventInfo, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // event 수정
     @ResponseBody
     @PatchMapping("/{eventIdx}")
-    public BaseResponse<String> modifyEvent(@PathVariable("eventIdx") int eventIdx, @RequestBody PatchEventReq patchEventReq){
+    public ResponseEntity<String> modifyEvent(@PathVariable("eventIdx") int eventIdx, @RequestBody PatchEventReq patchEventReq){
         try{
             if(patchEventReq.getUserIdx() != jwtService.getUserIdx()){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
 
             String eventRes = eventService.modifyEvent(eventIdx, patchEventReq);
-            return new BaseResponse<>(eventRes);
-        }catch (BaseException exception){
-            return new BaseResponse<>(exception.getStatus());
+            return new ResponseEntity<>(eventRes, HttpStatus.OK);
+        }catch (BaseException e){
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // event 삭제
     @ResponseBody
     @PatchMapping("/{eventIdx}/status")
-    public BaseResponse<String> deleteEvent(@PathVariable("eventIdx") int eventIdx){
+    public ResponseEntity<String> deleteEvent(@PathVariable("eventIdx") int eventIdx){
 
         try{
             int userIdx = eventProvider.getEventInfo(eventIdx).getUserIdx();
             if(userIdx != jwtService.getUserIdx()){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
             String deleteRes = eventService.deleteEvent(eventIdx);
-            return new BaseResponse<>(deleteRes);
+            return new ResponseEntity<>(deleteRes, HttpStatus.OK);
         }catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
     // event 전체 조회
     @ResponseBody
     @GetMapping
-    public BaseResponse<List<GetEventsInfo>> getEventsInfo(@RequestParam int planIdx){
+    public ResponseEntity<List<GetEventsInfo>> getEventsInfo(@RequestParam int planIdx){
         try{
             List<GetEventsInfo> eventsInfo = eventProvider.getEventsInfo(planIdx);
             if(eventsInfo.get(0).getUserIdx() != jwtService.getUserIdx()){
-                return new BaseResponse<>(INVALID_USER_JWT);
+                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
-            return new BaseResponse<>(eventsInfo);
-        }catch(BaseException exception){
-            return new BaseResponse<>((exception.getStatus()));
+            return new ResponseEntity<>(eventsInfo, HttpStatus.OK);
+        }catch(BaseException e){
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
         }
     }
 
