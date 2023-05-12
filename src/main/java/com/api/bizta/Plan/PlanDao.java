@@ -89,7 +89,7 @@ public class PlanDao {
     }
 
     //특정 plan 조회
-    public GetPlanInfo getPlanInfo(int planIdx) {
+    public PlanInfo getPlanInfo(int planIdx) {
 
         String getPlanInfoQuery =
                 "SELECT userIdx, country, city, hotel, transport, startDate, endDate, companionCnt " +
@@ -98,7 +98,7 @@ public class PlanDao {
         try {
             return this.jdbcTemplate.queryForObject(getPlanInfoQuery,
 
-                    (rs, rsNum) -> new GetPlanInfo(
+                    (rs, rsNum) -> new PlanInfo(
                             rs.getInt("userIdx"),
                             rs.getString("country"),
                             rs.getString("city"),

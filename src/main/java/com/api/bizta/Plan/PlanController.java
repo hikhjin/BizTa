@@ -88,10 +88,10 @@ public class PlanController {
     // 특정 plan 조회
     @ResponseBody
     @GetMapping("/{planIdx}")
-    public ResponseEntity<GetPlanInfo> getPlanInfo(@PathVariable ("planIdx") int planIdx) {
+    public ResponseEntity<PlanInfo> getPlanInfo(@PathVariable ("planIdx") int planIdx) {
         try {
-            GetPlanInfo getPlanInfo = planProvider.getPlanInfo(planIdx);
-            return new ResponseEntity<>(getPlanInfo, HttpStatus.OK);
+            PlanInfo planInfo = planProvider.getPlanInfo(planIdx);
+            return new ResponseEntity<>(planInfo, HttpStatus.OK);
         } catch (BaseException e) {
             HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
             return ResponseEntity.status(httpStatus).build();
