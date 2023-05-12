@@ -48,13 +48,13 @@ public class PlanController {
     // plan 수정
     @ResponseBody
     @PatchMapping("/{planIdx}")
-    public ResponseEntity<String> modifyPlan(@RequestBody PatchPlanReq patchPlansReq) {
+    public ResponseEntity<String> modifyPlan(@PathVariable("planIdx") int planIdx, @RequestBody PlanInfo planInfo) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
-            if(patchPlansReq.getUserIdx() != userIdxByJwt){
+            if(planInfo.getUserIdx() != userIdxByJwt){
                 return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
             }
-            planService.modifyPlan(patchPlansReq.getPlanIdx(), patchPlansReq);
+            planService.modifyPlan(planIdx, planInfo);
             String result = "Successfully modified plan.";
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (BaseException e) {
