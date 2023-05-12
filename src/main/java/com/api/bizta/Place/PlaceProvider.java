@@ -37,6 +37,9 @@ public class PlaceProvider {
         GetPlaceInfo placeInfo;
         try {
             placeInfo = placeDao.getPlaceInfo(placeIdx);
+            List<String> placeImgUrls = placeDao.getPlaceImgUrls(placeIdx);
+
+            placeInfo.setImgUrls(placeImgUrls);
         }
         catch(Exception exception){
             System.out.println(exception);

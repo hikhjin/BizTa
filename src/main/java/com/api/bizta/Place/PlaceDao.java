@@ -1,6 +1,7 @@
 package com.api.bizta.Place;
 
 import com.api.bizta.Place.model.*;
+import com.api.bizta.config.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -57,7 +58,28 @@ public class PlaceDao {
         } catch (EmptyResultDataAccessException e) { // 쿼리문에 해당하는 결과가 없을 때
             return null;
         }
+    }
 
+    public List<String> getPlaceImgUrls(int placeIdx){
+
+        String placeImgUrlsQuery =
+                "select imgUrl from PlaceImg where placeIdx = ?";
+        try{
+            return this.jdbcTemplate.query(placeImgUrlsQuery, placeImgUrlsRowMapper(), placeIdx);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
+    }
+
+    private RowMapper<String> placeImgUrlsRowMapper(){
+        return new RowMapper<String>() {
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                String placeImgUrls;
+                placeImgUrls = rs.getString("imgUrl");
+                return placeImgUrls;
+            }
+        };
     }
 
     //특정 장소 예약 정보 조회
@@ -132,7 +154,6 @@ public class PlaceDao {
                 placeInfo.setPlaceIdx(rs.getInt("placeIdx"));
                 placeInfo.setName(rs.getString("name"));
                 placeInfo.setCategory(rs.getString("category"));
-                placeInfo.setImgUrl(rs.getString("imgUrl"));
                 placeInfo.setAddress(rs.getString("address"));
                 placeInfo.setDescription(rs.getString("description"));
                 placeInfo.setGrade(rs.getFloat("grade"));
