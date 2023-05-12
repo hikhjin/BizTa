@@ -19,7 +19,8 @@ public class PlaceProvider {
         this.placeDao = placeDao;
     }
 
-    public List<GetPlaces> getPlaces(String category) throws BaseException{
+    public List<GetPlaces>
+    getPlaces(String category) throws BaseException{
 
         List<GetPlaces> places;
         try{

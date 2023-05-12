@@ -22,4 +22,7 @@ public class GetPlaceInfo {
     private float grade;
 //    private boolean favoriteCnt;
     private int reviewCnt;
+
+    private String price;
+    private String detail;
 }

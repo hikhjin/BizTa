@@ -26,10 +26,10 @@ public class PlaceDao {
 
         String getPlacesQuery;
         if(category.equals("")){
-            getPlacesQuery = "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt " +
+            getPlacesQuery = "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt, price " +
                     "from Place where status = 'active';";
         }else{
-            getPlacesQuery = "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt " +
+            getPlacesQuery = "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt, price " +
                     "from Place where category = ? and status = 'active'";
         }
 
@@ -50,7 +50,7 @@ public class PlaceDao {
     public GetPlaceInfo getPlaceInfo(int placeIdx) {
 
         String getPlaceInfoQuery =
-                "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt " +
+                "select placeIdx, name, category, address, description, grade, reviewCnt, price, detail " +
                         "from Place where placeIdx = ? and status = 'active';";
 
         try {
@@ -141,6 +141,7 @@ public class PlaceDao {
                 places.setDescription(rs.getString("description"));
                 places.setGrade(rs.getFloat("grade"));
                 places.setReviewCnt(rs.getInt("reviewCnt"));
+                places.setPrice(rs.getString("price"));
                 return places;
             }
         };
@@ -158,6 +159,8 @@ public class PlaceDao {
                 placeInfo.setDescription(rs.getString("description"));
                 placeInfo.setGrade(rs.getFloat("grade"));
                 placeInfo.setReviewCnt(rs.getInt("reviewCnt"));
+                placeInfo.setPrice(rs.getString("price"));
+                placeInfo.setDetail(rs.getString("detail"));
                 return placeInfo;
             }
         };

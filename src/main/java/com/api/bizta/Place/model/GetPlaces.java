@@ -20,4 +20,6 @@ public class GetPlaces {
 //    private boolean favoriteCnt;
     private int reviewCnt;
 
+    private String price;
+
 }
