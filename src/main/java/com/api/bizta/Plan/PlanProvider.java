@@ -22,18 +22,18 @@ public class PlanProvider {
     }
 
     // 특정 plan 조회
-    public GetPlanInfo getPlanInfo(int placeIdx) throws BaseException {
+    public PlanInfo getPlanInfo(int placeIdx) throws BaseException {
 
-        GetPlanInfo getPlanInfo;
+        PlanInfo planInfo;
         try {
-            getPlanInfo = planDao.getPlanInfo(placeIdx);
+            planInfo = planDao.getPlanInfo(placeIdx);
         }
         catch(Exception exception){
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
         }
-        if(getPlanInfo == null) throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
-        return getPlanInfo;
+        if(planInfo == null) throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
+        return planInfo;
     }
 
 
