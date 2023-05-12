@@ -35,12 +35,12 @@ public class PlanService {
     }
 
     // plan 수정
-    public void modifyPlan(int planIdx, PatchPlanReq patchPlanReq) throws BaseException{
+    public void modifyPlan(int planIdx, PlanInfo planInfo) throws BaseException{
 
         try{
-            int result = planDao.modifyPlanInfo(patchPlanReq);
+            int result = planDao.modifyPlanInfo(planIdx, planInfo);
             planDao.deleteInterest(planIdx); // 기존 interest 삭제
-            for (Interest interest : patchPlanReq.getInterests()){
+            for (Interest interest : planInfo.getInterests()){
                 result = planDao.insertPlanInterest(planIdx, interest);
             }
             if(result == 0) throw new BaseException(MODIFY_FAIL_PLAN);

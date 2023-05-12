@@ -42,12 +42,12 @@ public class PlanDao {
     }
 
     // plan 수정 (interest 제외)
-    public int modifyPlanInfo(PatchPlanReq patchPlanReq) {
+    public int modifyPlanInfo(int planIdx, PlanInfo planInfo) {
         String modifyPlanQuery = "UPDATE Plan SET country=?, city=?, hotel=?, transport=?,\n" +
                 "                startDate=?, endDate=?, companionCnt=? WHERE planIdx=?;";
-        Object[] modifyPlanParams = new Object[]{patchPlanReq.getCountry(), patchPlanReq.getCity(),
-                patchPlanReq.getHotel(), patchPlanReq.getTransport(), patchPlanReq.getStartDate(),
-                patchPlanReq.getEndDate(), patchPlanReq.getCompanionCnt(), patchPlanReq.getPlanIdx()};
+        Object[] modifyPlanParams = new Object[]{planInfo.getCountry(), planInfo.getCity(),
+                planInfo.getHotel(), planInfo.getTransport(), planInfo.getStartDate(),
+                planInfo.getEndDate(), planInfo.getCompanionCnt(), planIdx};
         this.jdbcTemplate.update(modifyPlanQuery, modifyPlanParams);
 
         String lastInsertIdxQuery = "select last_insert_id()"; // 마지막으로 삽입된 Idx 반환
@@ -92,7 +92,7 @@ public class PlanDao {
     public GetPlanInfo getPlanInfo(int planIdx) {
 
         String getPlanInfoQuery =
-                "SELECT userIdx, planIdx, country, city, hotel, transport, startDate, endDate, companionCnt " +
+                "SELECT userIdx, country, city, hotel, transport, startDate, endDate, companionCnt " +
                         "FROM Plan WHERE planIdx=? AND status = 'active';";
         String getInterestQuery = "SELECT interest FROM Interest WHERE planIdx=? AND status = 'active';";
         try {
@@ -100,7 +100,6 @@ public class PlanDao {
 
                     (rs, rsNum) -> new GetPlanInfo(
                             rs.getInt("userIdx"),
-                            rs.getInt("planIdx"),
                             rs.getString("country"),
                             rs.getString("city"),
                             rs.getString("hotel"),
@@ -109,7 +108,7 @@ public class PlanDao {
                             rs.getString("endDate"),
                             rs.getInt("companionCnt"),
 
-                            interest = this.jdbcTemplate.query(getInterestQuery, new Object[]{rs.getInt("planIdx")},
+                            interest = this.jdbcTemplate.query(getInterestQuery, new Object[]{planIdx},
                                     (rk, rkNum) -> new Interest(
                                             rk.getString("interest")
                                     ))
