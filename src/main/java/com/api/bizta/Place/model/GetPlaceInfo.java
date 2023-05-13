@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,10 +15,14 @@ public class GetPlaceInfo {
     private int placeIdx;
     private String name;
     private String category;
-    private String imgUrl;
+//    private String imgUrl;
+    private List<String> imgUrls;
     private String address;
     private String description;
     private float grade;
 //    private boolean favoriteCnt;
     private int reviewCnt;
+
+    private String price;
+    private String detail;
 }

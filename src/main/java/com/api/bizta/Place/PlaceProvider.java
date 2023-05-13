@@ -19,7 +19,8 @@ public class PlaceProvider {
         this.placeDao = placeDao;
     }
 
-    public List<GetPlaces> getPlaces(String category) throws BaseException{
+    public List<GetPlaces>
+    getPlaces(String category) throws BaseException{
 
         List<GetPlaces> places;
         try{
@@ -37,6 +38,9 @@ public class PlaceProvider {
         GetPlaceInfo placeInfo;
         try {
             placeInfo = placeDao.getPlaceInfo(placeIdx);
+            List<String> placeImgUrls = placeDao.getPlaceImgUrls(placeIdx);
+
+            placeInfo.setImgUrls(placeImgUrls);
         }
         catch(Exception exception){
             System.out.println(exception);
