@@ -85,7 +85,6 @@ public class UserService {
                 throw new BaseException(FAILED_TO_LOGIN);
             }
         }
-        return new PostLoginRes(getUserInfo.getUserIdx(), getUserInfo.getId(),
-                getUserInfo.getEmail(), getUserInfo.getNickName());
+        return new PostLoginRes(getUserInfo.getUserIdx(), getUserInfo.getNickName());
     }
 }

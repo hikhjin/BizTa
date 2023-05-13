@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.api.bizta.config.BaseResponseStatus.*;
@@ -121,27 +122,21 @@ public class EventController {
         }
     }
 
-//    @ResponseBody
-//    @GetMapping("/google")
-//    public BaseResponse<> getGoogleEvents(){
-//        // Google Calendar API 클라이언트 인스턴스 생성
-//        HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-//        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-//        GoogleCredential credential = new GoogleCredential().setAccessToken(accessToken);
-//
-//        Calendar calendar = new Calendar.Builder(httpTransport, jsonFactory, credential)
-//                .setApplicationName("YOUR_APP_NAME")
-//                .build();
-//
-//        // Calendar API 호출하여 기본 캘린더의 이벤트 목록 가져오기
-//        Events events = calendar.events().list("primary").execute();
-//
-//        // 이벤트 목록 출력
-//        List<Event> items = events.getItems();
-//        for (Event event : items) {
-//            System.out.printf("%s (%s)\n", event.getSummary(), event.getStart().getDateTime());
-//        }
-//    }
+    @ResponseBody
+    @GetMapping("/google")
+    public ResponseEntity<List<GetGoogleEvents>> getGoogleEvents(@RequestHeader("Authorization") String authorizationHeader){
+         try {
+             List<GetGoogleEvents> googleEvents;
 
+             String accessToken = authorizationHeader.replace("Bearer ", "");
+
+             googleEvents = eventService.getGoogleEvents(accessToken);
+
+             return new ResponseEntity<>(googleEvents, HttpStatus.OK);
+         }catch (BaseException e){
+             HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+             return ResponseEntity.status(httpStatus).build();
+         }
+    }
 
 }
