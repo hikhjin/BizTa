@@ -67,7 +67,7 @@ public enum BaseResponseStatus {
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
     REQUESTED_DATA_FAIL_TO_EXIST(false, 4002, "요청한 데이터가 존재하지 않습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
-    PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다.");
+    PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
 
 //    //[PATCH] /users/{userIdx}
 //    MODIFY_FAIL_USERNAME(false,4014,"유저네임 수정 실패"),
@@ -79,6 +79,7 @@ public enum BaseResponseStatus {
 
 
     // 5000 : 필요시 만들어서 쓰세요
+    GOOGLE_EVENTS_IMPORT_ERROR(false, 5000, "구글 이벤트 조회에 실패하였습니다.");
 
     // 6000 : 필요시 만들어서 쓰세요
 

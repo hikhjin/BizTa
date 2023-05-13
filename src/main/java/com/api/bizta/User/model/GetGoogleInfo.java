@@ -24,4 +24,11 @@ public class GetGoogleInfo {
         this.email = email;
         this.getTokenRes = getTokenRes;
     }
+
+    public GetGoogleInfo(String id, String nickName, String password, String email){
+        this.id = id;
+        this.nickName = nickName;
+        this.password = password;
+        this.email = email;
+    }
 }

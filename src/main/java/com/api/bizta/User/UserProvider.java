@@ -65,24 +65,21 @@ public class UserProvider {
     }
 
     public GetGoogleInfo getGoogleInfo(String method, String code, String registrationId) {
-        Map<String, String> token = getToken(method, code, registrationId);
+        String accessToken = getAccessToken(method, code, registrationId);
 
-        JsonNode userResourceNode = getUserResource(token.get("access_token"), registrationId);
+        JsonNode userResourceNode = getUserResource(accessToken, registrationId);
 
         String id = userResourceNode.get("id").asText();
         String nickname = userResourceNode.get("name").asText();
         // 편의?를 위해 구글 회원가입할 때 비밀번호는 email로 설정함
         String password = userResourceNode.get("email").asText();
         String email = userResourceNode.get("email").asText();
-        GetTokenRes getTokenRes = new GetTokenRes("Bearer", token.get("access_token"));
+        GetTokenRes getTokenRes = new GetTokenRes("Bearer", accessToken);
 
-        if(method.equals("auth")){
-            return new GetGoogleInfo(id, nickname, password, email, getTokenRes, token.get("refresh_token"));
-        }
         return new GetGoogleInfo(id, nickname, password, email, getTokenRes);
     }
 
-    private Map<String, String> getToken(String method, String authorizationCode, String registrationId) {
+    private String getAccessToken(String method, String authorizationCode, String registrationId) {
         String clientId = env.getProperty("oauth2." + registrationId + ".client-id");
         String clientSecret = env.getProperty("oauth2." + registrationId + ".client-secret");
         String redirectUri = "";
@@ -107,10 +104,13 @@ public class UserProvider {
 
         ResponseEntity<JsonNode> responseNode = restTemplate.exchange(tokenUri, HttpMethod.POST, entity, JsonNode.class);
         JsonNode accessTokenNode = responseNode.getBody();
-        Map<String, String> token = new HashMap<>();
-        token.put("access_token", accessTokenNode.get("access_token").asText());
-        token.put("refresh_token", accessTokenNode.get("refresh_token") != null ? accessTokenNode.get("refresh_token").asText() : null);
-        return token;
+        String accessToken = accessTokenNode.get("access_token").asText();
+
+//        System.out.println(accessTokenNode);
+//        Map<String, String> token = new HashMap<>();
+//        token.put("access_token", accessTokenNode.get("access_token").asText());
+//        token.put("refresh_token", accessTokenNode.get("refresh_token") != null ? accessTokenNode.get("refresh_token").asText() : null);
+        return accessToken;
     }
 
     private JsonNode getUserResource(String accessToken, String registrationId) {

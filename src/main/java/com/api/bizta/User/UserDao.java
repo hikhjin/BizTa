@@ -69,6 +69,11 @@ public class UserDao {
                 checkUserExistParams);
     }
 
+//    public int addRefreshToken(int userIdx){
+//        String addRefreshTokenQuery = "insert into Token(userIdx, refresh_token) values (?, ?)";
+//
+//    }
+
     public GetUserInfo getUserInfo(PostLoginReq postLoginReq) {
 
         String getUserInfoQuery =
