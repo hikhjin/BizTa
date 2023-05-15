@@ -15,7 +15,7 @@ public class GetPlaceInfo {
     private int placeIdx;
     private String name;
     private String category;
-//    private String imgUrl;
+    private String imgUrl;
     private List<String> imgUrls;
     private String address;
     private String description;
