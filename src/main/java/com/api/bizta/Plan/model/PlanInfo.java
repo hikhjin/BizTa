@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class PlanInfo {
     private int userIdx;
-    private int planIdx;
     private String country;
     private String city;
     private String hotel;

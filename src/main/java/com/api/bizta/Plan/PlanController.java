@@ -114,7 +114,7 @@ public class PlanController {
             return ResponseEntity.status(httpStatus).build();
         }
     }
-/*
+
     // 특정 plan의 추천 목록 조회 (3개만)
     @ResponseBody
     @GetMapping("/{planIdx}/recommendations")
@@ -129,6 +129,6 @@ public class PlanController {
     }
 
 
- */
+
 
 }

@@ -60,13 +60,13 @@ public class PlanProvider {
         return planInfo;
     }
 
-    /*
+
     // 특정 plan 추천 목록 조회 (3개)
     public List<GetPlaces> getRecommendations(int planIdx) throws BaseException {
         List<GetPlaces> recommendations;
         try {
-            String subCategory = planDao.getSubCategory(planIdx);
-            recommendations = planDao.getRecommendations(subCategory);
+            List<Interest> subCategories = planDao.getSubCategories(planIdx);
+            recommendations = planDao.getRecommendations(subCategories);
         }
         catch(Exception exception){
             System.out.println(exception);
@@ -76,5 +76,5 @@ public class PlanProvider {
         return recommendations;
     }
 
-     */
+
 }
