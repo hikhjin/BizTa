@@ -167,31 +167,29 @@ public class PlanDao {
                 ));
     }
 
-
-
     // 특정 plan 추천 목록 조회 (3개)
-    /*
-    public List<GetPlaces> getRecommendations(String subCategory) {
-
-        String getRecommendationsQuery = "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt, price " +
-                "from Place " +
-                "where status = 'active' and subCategory = ? " +
-                "order by grade desc limit 3;";
-        try {
-            List<GetPlaces> places;
-            places = this.jdbcTemplate.query(getRecommendationsQuery, placesRowMapper(), subCategory);
-            return places;
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-     */
     public List<GetPlaces> getRecommendations(List<Interest> subCategories) {
         String getRecommendationsQuery = "SELECT placeIdx, name, category, imgUrl, address, description, grade, reviewCnt, price " +
                 "FROM Place " +
                 "WHERE status = 'active' AND subCategory IN (:subCategories) " +
                 "ORDER BY grade DESC LIMIT 3;";
+        try {
+            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            List<String> subCategoryNames = subCategories.stream().map(Interest::getInterest).collect(Collectors.toList());
+            parameters.addValue("subCategories", subCategoryNames);
+
+            return namedTemplate.query(getRecommendationsQuery, parameters, placesRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    // 특정 plan 추천 목록 조회 (3개 이상)
+    public List<GetPlaces> getMoreRecommendations(List<Interest> subCategories) {
+        String getRecommendationsQuery = "SELECT placeIdx, name, category, imgUrl, address, description, grade, reviewCnt, price " +
+                "FROM Place " +
+                "WHERE status = 'active' AND subCategory IN (:subCategories) " +
+                "ORDER BY grade DESC;";
         try {
             MapSqlParameterSource parameters = new MapSqlParameterSource();
             List<String> subCategoryNames = subCategories.stream().map(Interest::getInterest).collect(Collectors.toList());

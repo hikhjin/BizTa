@@ -128,6 +128,19 @@ public class PlanController {
         }
     }
 
+    // 특정 plan의 추천 목록 조회 (3개 이상)
+    @ResponseBody
+    @GetMapping("/{planIdx}/recommendations/more")
+    public ResponseEntity<List<GetPlaces>> getMoreRecommendations(@PathVariable ("planIdx") int planIdx) {
+        try {
+            List<GetPlaces> getPlaces = planProvider.getMoreRecommendations(planIdx);
+            return new ResponseEntity<>(getPlaces, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
+        }
+    }
+
 
 
 

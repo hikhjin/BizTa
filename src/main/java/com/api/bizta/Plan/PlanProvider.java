@@ -76,5 +76,20 @@ public class PlanProvider {
         return recommendations;
     }
 
+    // 특정 plan 추천 목록 조회 (3개 이상)
+    public List<GetPlaces> getMoreRecommendations(int planIdx) throws BaseException {
+        List<GetPlaces> recommendations;
+        try {
+            List<Interest> subCategories = planDao.getSubCategories(planIdx);
+            recommendations = planDao.getMoreRecommendations(subCategories);
+        }
+        catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+        if(recommendations == null) throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
+        return recommendations;
+    }
+
 
 }
