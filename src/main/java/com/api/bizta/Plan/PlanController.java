@@ -1,4 +1,5 @@
 package com.api.bizta.Plan;
+import com.api.bizta.Place.model.GetPlaces;
 import com.api.bizta.Plan.model.*;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.api.bizta.config.BaseResponseStatus.INVALID_USER_JWT;
 
@@ -85,6 +88,20 @@ public class PlanController {
         }
     }
 
+    // 전체 plan 리스트 조회
+    @ResponseBody
+    @GetMapping ("")
+    public ResponseEntity<List<PlanInfo>> getPlaces(){
+        try{
+            int userIdxByJwt = jwtService.getUserIdx();
+            List<PlanInfo> planInfos = planProvider.getPlans(userIdxByJwt);
+            return new ResponseEntity<>(planInfos, HttpStatus.OK);
+        }catch(BaseException e){
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
+        }
+    }
+
     // 특정 plan 조회
     @ResponseBody
     @GetMapping("/{planIdx}")
@@ -97,5 +114,34 @@ public class PlanController {
             return ResponseEntity.status(httpStatus).build();
         }
     }
+
+    // 특정 plan의 추천 목록 조회 (3개만)
+    @ResponseBody
+    @GetMapping("/{planIdx}/recommendations")
+    public ResponseEntity<List<GetPlaces>> getRecommendations(@PathVariable ("planIdx") int planIdx) {
+        try {
+            List<GetPlaces> getPlaces = planProvider.getRecommendations(planIdx);
+            return new ResponseEntity<>(getPlaces, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
+        }
+    }
+
+    // 특정 plan의 추천 목록 조회 (3개 이상)
+    @ResponseBody
+    @GetMapping("/{planIdx}/recommendations/more")
+    public ResponseEntity<List<GetPlaces>> getMoreRecommendations(@PathVariable ("planIdx") int planIdx) {
+        try {
+            List<GetPlaces> getPlaces = planProvider.getMoreRecommendations(planIdx);
+            return new ResponseEntity<>(getPlaces, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
+        }
+    }
+
+
+
 
 }
