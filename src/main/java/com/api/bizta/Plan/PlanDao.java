@@ -80,7 +80,7 @@ public class PlanDao {
     public PlanInfo getPlanInfo(int planIdx) {
 
         String getPlanInfoQuery =
-                "SELECT userIdx, country, city, hotel, transport, startDate, endDate, companionCnt " +
+                "SELECT userIdx, planIdx, country, city, hotel, transport, startDate, endDate, companionCnt, imgUrl " +
                         "FROM Plan WHERE planIdx=? AND status = 'active';";
         String getInterestQuery = "SELECT interest FROM Interest WHERE planIdx=? AND status = 'active';";
         try {
@@ -88,6 +88,7 @@ public class PlanDao {
 
                     (rs, rsNum) -> new PlanInfo(
                             rs.getInt("userIdx"),
+                            rs.getInt("planIdx"),
                             rs.getString("country"),
                             rs.getString("city"),
                             rs.getString("hotel"),
@@ -95,6 +96,7 @@ public class PlanDao {
                             rs.getString("startDate"),
                             rs.getString("endDate"),
                             rs.getInt("companionCnt"),
+                            rs.getString("imgUrl"),
 
                             interest = this.jdbcTemplate.query(getInterestQuery, new Object[]{planIdx},
                                     (rk, rkNum) -> new Interest(
@@ -118,7 +120,7 @@ public class PlanDao {
     public List<PlanInfo> getPlans(int userIdx, List<PlanIdx> planIdxes) {
 
         String getPlansQuery =
-                "SELECT userIdx, planIdx, country, city, hotel, transport, startDate, endDate, companionCnt " +
+                "SELECT userIdx, planIdx, country, city, hotel, transport, startDate, endDate, companionCnt, imgUrl " +
                         "FROM Plan WHERE userIdx=? AND planIdx=? AND status = 'active';";
         String getInterestQuery = "SELECT interest FROM Interest WHERE planIdx=? AND status = 'active';";
         try {
@@ -133,6 +135,7 @@ public class PlanDao {
                 this.jdbcTemplate.query(getPlansQuery, (rs, rsNum) -> {
                     PlanInfo planInfo = new PlanInfo(
                             rs.getInt("userIdx"),
+                            rs.getInt("planIdx"),
                             rs.getString("country"),
                             rs.getString("city"),
                             rs.getString("hotel"),
@@ -140,6 +143,7 @@ public class PlanDao {
                             rs.getString("startDate"),
                             rs.getString("endDate"),
                             rs.getInt("companionCnt"),
+                            rs.getString("imgUrl"),
                             interests
                     );
 
