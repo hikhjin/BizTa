@@ -97,6 +97,20 @@ public class PlaceDao {
 
     }
 
+    public GetPlaceDetail getPlaceDetail(int placeIdx) {
+
+        String getPlaceDetailQuery =
+                "select placeIdx, detail from Place " +
+                        "where placeIdx = ? and status = 'active';";
+
+        try {
+            return this.jdbcTemplate.queryForObject(getPlaceDetailQuery, placeDetailRowMapper(), placeIdx);
+        } catch (EmptyResultDataAccessException e) { // 쿼리문에 해당하는 결과가 없을 때
+            return null;
+        }
+
+    }
+
     public List<GetPlaceReview> getPlaceReview(int placeIdx) {
 
         String getPlaceReviewQuery =
@@ -177,6 +191,18 @@ public class PlaceDao {
                 placeReservation.setSiteUrl(rs.getString("siteUrl"));
                 placeReservation.setContact(rs.getString("contact"));
                 return placeReservation;
+            }
+        };
+    }
+
+    private RowMapper<GetPlaceDetail> placeDetailRowMapper(){
+        return new RowMapper<GetPlaceDetail>() {
+            @Override
+            public GetPlaceDetail mapRow(ResultSet rs, int rowNum) throws SQLException {
+                GetPlaceDetail placeDetail = new GetPlaceDetail();
+                placeDetail.setPlaceIdx(rs.getInt("placeIdx"));
+                placeDetail.setDetail(rs.getString("detail"));
+                return placeDetail;
             }
         };
     }

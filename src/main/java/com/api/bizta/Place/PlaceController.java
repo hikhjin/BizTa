@@ -76,6 +76,20 @@ public class PlaceController {
     }
 
     @ResponseBody
+    @GetMapping("/{placeIdx}/detail") //특정 장소 사이트 주소, 연락처(reservation) 조회 /places/1/reservation
+    public ResponseEntity<GetPlaceDetail> getPlaceDetail(@PathVariable("placeIdx") int placeIdx) {
+        try {
+            GetPlaceDetail placeDetail = placeProvider.getPlaceDetail(placeIdx);
+            return new ResponseEntity<>(placeDetail, HttpStatus.OK);
+        } catch (BaseException e) {
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
+        }
+    }
+
+
+
+    @ResponseBody
     @GetMapping("/{placeIdx}/review")
     public ResponseEntity<List<GetPlaceReview>> getPlaceReview(@PathVariable("placeIdx") int placeIdx) {
         try {
