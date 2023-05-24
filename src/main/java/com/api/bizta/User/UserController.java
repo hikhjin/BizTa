@@ -83,8 +83,8 @@ public class UserController {
     @GetMapping("/{method}/google")
     public RedirectView googleLoginUri(@PathVariable String method){
         String url = "https://accounts.google.com/o/oauth2/auth?client_id=356448383900-kt44mvojcmdqji36q3ad66r8gtp6am5r.apps.googleusercontent.com&";
-        url += "redirect_uri=http://localhost:8080/users/" + method + "/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
-
+//        url += "redirect_uri=http://localhost:8080/users/" + method + "/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
+        url += "redirect_uri=https://www.bizta.store/users/" + method + "/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
         return new RedirectView(url);
     }
 
