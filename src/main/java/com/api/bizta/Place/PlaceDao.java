@@ -50,7 +50,7 @@ public class PlaceDao {
     public GetPlaceInfo getPlaceInfo(int placeIdx) {
 
         String getPlaceInfoQuery =
-                "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt, price, detail " +
+                "select placeIdx, name, category, imgUrl, address, description, grade, reviewCnt, siteUrl, price, detail " +
                         "from Place where placeIdx = ? and status = 'active';";
 
         try {
@@ -160,6 +160,7 @@ public class PlaceDao {
                 placeInfo.setDescription(rs.getString("description"));
                 placeInfo.setGrade(rs.getFloat("grade"));
                 placeInfo.setReviewCnt(rs.getInt("reviewCnt"));
+                placeInfo.setSiteUrl(rs.getString("siteUrl"));
                 placeInfo.setPrice(rs.getString("price"));
                 placeInfo.setDetail(rs.getString("detail"));
                 return placeInfo;

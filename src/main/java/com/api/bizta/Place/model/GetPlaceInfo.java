@@ -23,6 +23,8 @@ public class GetPlaceInfo {
 //    private boolean favoriteCnt;
     private int reviewCnt;
 
+    private String siteUrl;
+
     private String price;
     private String detail;
 }
