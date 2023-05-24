@@ -63,6 +63,20 @@ public class PlaceProvider {
         return placeReservation;
     }
 
+    public GetPlaceDetail getPlaceDetail(int placeIdx) throws BaseException {
+
+        GetPlaceDetail placeDetail;
+        try {
+            placeDetail = placeDao.getPlaceDetail(placeIdx);
+        }
+        catch(Exception exception){
+            System.out.println(exception);
+            throw new BaseException(DATABASE_ERROR);
+        }
+        if(placeDetail == null) throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
+        return placeDetail;
+    }
+
     public List<GetPlaceReview> getPlaceReview(int placeIdx) throws BaseException {
 
         List<GetPlaceReview> placeReview;
