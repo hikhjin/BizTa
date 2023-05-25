@@ -151,7 +151,7 @@ public class EventDao {
 
     public List<GetEventsInfo> getEventsInfo(int planIdx) {
 
-        String getEventsInfoQuery = "select userIdx, title, date, startTime, endTime " +
+        String getEventsInfoQuery = "select userIdx, eventIdx, title, date, startTime, endTime " +
                     "from Event where planIdx = ? and status = 'active';";
 
         int getEventsParam = planIdx;
@@ -169,6 +169,7 @@ public class EventDao {
             public GetEventsInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
                 GetEventsInfo getEventsInfo = new GetEventsInfo();
                 getEventsInfo.setUserIdx(rs.getInt("userIdx"));
+                getEventsInfo.setEventIdx(rs.getInt("eventIdx"));
                 getEventsInfo.setTitle(rs.getString("title"));
                 getEventsInfo.setDate(rs.getString("date"));
                 getEventsInfo.setStartTime(rs.getString("startTime"));
