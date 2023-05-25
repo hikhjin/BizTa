@@ -3,6 +3,8 @@ package com.api.bizta.Event;
 import com.api.bizta.Event.model.GetEventInfo;
 import com.api.bizta.Event.model.GetEventsInfo;
 import com.api.bizta.Place.model.GetPlaceInfo;
+import com.api.bizta.Plan.model.PlanIdx;
+import com.api.bizta.Plan.model.PlanInfo;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
@@ -75,6 +77,29 @@ public class EventProvider {
         }catch (Exception e){
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public  List<GetEventsInfo> getEventsToday(int userIdx) throws BaseException{
+        try{
+            List<PlanIdx> planIdxes = getPlanIdxes(userIdx);
+            List<GetEventsInfo> eventsToday = eventDao.getEventsToday(userIdx, planIdxes);
+            return eventsToday;
+        }catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<PlanIdx> getPlanIdxes(int userIdx) throws BaseException {
+        List<PlanIdx> planIdxes;
+        try {
+            planIdxes = eventDao.getPlanIdxes(userIdx);
+        }
+        catch (Exception ignored) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+        if(planIdxes.size() == 0) throw new BaseException(REQUESTED_DATA_FAIL_TO_EXIST);
+
+        return planIdxes;
     }
 
 }

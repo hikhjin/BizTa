@@ -2,6 +2,7 @@ package com.api.bizta.Event;
 
 import com.api.bizta.Event.model.*;
 import com.api.bizta.Place.model.GetPlaces;
+import com.api.bizta.Plan.model.PlanIdx;
 import com.api.bizta.config.BaseException;
 import com.api.bizta.config.BaseResponse;
 import com.api.bizta.utils.JwtService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +119,19 @@ public class EventController {
             }
             return new ResponseEntity<>(eventsInfo, HttpStatus.OK);
         }catch(BaseException e){
+            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+            return ResponseEntity.status(httpStatus).build();
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/today")
+    public ResponseEntity<List<GetEventsInfo>> getEventsToday(){
+        try{
+            int userIdx = jwtService.getUserIdx();
+            List<GetEventsInfo> eventsToday = eventProvider.getEventsToday(userIdx);
+            return new ResponseEntity<>(eventsToday, HttpStatus.OK);
+        }catch (BaseException e){
             HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
             return ResponseEntity.status(httpStatus).build();
         }

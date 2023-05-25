@@ -4,6 +4,9 @@ import com.api.bizta.Event.model.GetEventInfo;
 import com.api.bizta.Event.model.GetEventsInfo;
 import com.api.bizta.Event.model.PatchEventReq;
 import com.api.bizta.Event.model.PostEventReq;
+import com.api.bizta.Plan.model.Interest;
+import com.api.bizta.Plan.model.PlanIdx;
+import com.api.bizta.Plan.model.PlanInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -151,7 +156,7 @@ public class EventDao {
 
     public List<GetEventsInfo> getEventsInfo(int planIdx) {
 
-        String getEventsInfoQuery = "select userIdx, eventIdx, title, date, startTime, endTime " +
+        String getEventsInfoQuery = "select planIdx, userIdx, title, date, startTime, endTime, description " +
                     "from Event where planIdx = ? and status = 'active';";
 
         int getEventsParam = planIdx;
@@ -168,14 +173,53 @@ public class EventDao {
             @Override
             public GetEventsInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
                 GetEventsInfo getEventsInfo = new GetEventsInfo();
+                getEventsInfo.setPlanIdx(rs.getInt("planIdx"));
                 getEventsInfo.setUserIdx(rs.getInt("userIdx"));
-                getEventsInfo.setEventIdx(rs.getInt("eventIdx"));
                 getEventsInfo.setTitle(rs.getString("title"));
                 getEventsInfo.setDate(rs.getString("date"));
                 getEventsInfo.setStartTime(rs.getString("startTime"));
                 getEventsInfo.setEndTime(rs.getString("endTime"));
+                getEventsInfo.setDescription(rs.getString("description"));
                 return getEventsInfo;
             }
         };
+    }
+
+    public List<PlanIdx> getPlanIdxes(int userIdx) {
+        String getPlanIdxesQuery = "select distinct planIdx from Plan where userIdx = ?;";
+        return this.jdbcTemplate.query(getPlanIdxesQuery,
+                (rs, rowNum) -> new PlanIdx(rs.getInt("planIdx")), userIdx);
+    }
+
+    public List<GetEventsInfo> getEventsToday(int userIdx, List<PlanIdx> planIdxes) {
+
+        String getEventsTodayQuery =
+                "SELECT planIdx, userIdx, title, date, startTime, endTime, description " +
+                        "FROM Event WHERE userIdx=? AND planIdx=? AND date=? AND status = 'active';";
+        try {
+
+            List<GetEventsInfo> eventsToday = new ArrayList<>();
+            LocalDate today = LocalDate.now();
+
+            for (PlanIdx planIdx : planIdxes) {
+                this.jdbcTemplate.query(getEventsTodayQuery, (rs, rsNum) -> {
+                    GetEventsInfo eventInfo = new GetEventsInfo(
+                            rs.getInt("planIdx"),
+                            rs.getInt("userIdx"),
+                            rs.getString("title"),
+                            rs.getString("date"),
+                            rs.getString("startTime"),
+                            rs.getString("endTime"),
+                            rs.getString("description")
+                    );
+                    eventsToday.add(eventInfo);
+                    return eventInfo;
+                }, userIdx, planIdx.getPlanIdx(), today);
+            }
+
+            return eventsToday;
+        } catch (EmptyResultDataAccessException e) { // 쿼리문에 해당하는 결과가 없을 때
+            return null;
+        }
     }
 }
