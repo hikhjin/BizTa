@@ -10,10 +10,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetEventsInfo {
+    private int planIdx;
     private int userIdx;
-    private int eventIdx;
     private String title;
     private String date;
     private String startTime;
     private String endTime;
+
+    private String description;
 }
