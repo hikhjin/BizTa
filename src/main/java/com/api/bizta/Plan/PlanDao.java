@@ -116,6 +116,20 @@ public class PlanDao {
                 (rs, rowNum) -> new PlanIdx(rs.getInt("planIdx")), userIdx);
     }
 
+    // place에서 랜덤으로 imgUrl 뽑기
+    public String getImgUrl() {
+        String getImgUrlQuery = "SELECT imgUrl FROM Place WHERE status = 'active' ORDER BY RAND() LIMIT 1";
+        return this.jdbcTemplate.queryForObject(getImgUrlQuery, String.class);
+    }
+
+    // 랜덤으로 뽑은 imgUrl 업데이트
+    public int inputImgUrl(int planIdx, String imgUrl) {
+        String inputImgQuery = "UPDATE Plan SET imgUrl=? WHERE planIdx=?;";
+        Object[] inputImgParams = new Object[]{imgUrl, planIdx};
+        return this.jdbcTemplate.update(inputImgQuery, inputImgParams);
+    }
+
+
     // plan 전체 조회
     public List<PlanInfo> getPlans(int userIdx, List<PlanIdx> planIdxes) {
 

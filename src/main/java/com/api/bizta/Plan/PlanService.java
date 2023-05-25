@@ -21,12 +21,14 @@ public class PlanService {
     }
 
     // plan 추가
-    public PostPlanRes createPlan(int userIdx, PlanInfo planInfo) throws BaseException{
+    public PostPlanRes createPlan(int userIdx, PlanInfo planInfo) throws BaseException {
         try {
             int planIdx = planDao.insertPlanInfo(userIdx, planInfo); // interest 제외 plan 추가
-            for (Interest interest : planInfo.getInterests()){ //interest 추가
+            for (Interest interest : planInfo.getInterests()) { // interest 추가
                 planDao.insertPlanInterest(planIdx, interest);
             }
+            String imgUrl = planDao.getImgUrl(); // 랜덤 imgUrl 뽑아서
+            planDao.inputImgUrl(planIdx, imgUrl); // imgUrl 전달하여 업데이트
             return new PostPlanRes(planIdx);
         } catch (Exception exception) {
             System.out.println(exception); // 에러 콘솔창 출력
