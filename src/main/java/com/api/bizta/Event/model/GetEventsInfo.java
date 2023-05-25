@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GetEventsInfo {
     private int userIdx;
+    private int eventIdx;
     private String title;
     private String date;
     private String startTime;
