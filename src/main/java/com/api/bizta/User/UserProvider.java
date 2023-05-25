@@ -64,8 +64,8 @@ public class UserProvider {
         }
     }
 
-    public GetGoogleInfo getGoogleInfo(String method, String code, String registrationId) {
-        String accessToken = getAccessToken(method, code, registrationId);
+    public GetGoogleInfo getGoogleInfo(String code, String registrationId) {
+        String accessToken = getAccessToken(code, registrationId);
 
         JsonNode userResourceNode = getUserResource(accessToken, registrationId);
 
@@ -79,15 +79,11 @@ public class UserProvider {
         return new GetGoogleInfo(id, nickname, password, email, getTokenRes);
     }
 
-    private String getAccessToken(String method, String authorizationCode, String registrationId) {
+    private String getAccessToken(String authorizationCode, String registrationId) {
         String clientId = env.getProperty("oauth2." + registrationId + ".client-id");
         String clientSecret = env.getProperty("oauth2." + registrationId + ".client-secret");
         String redirectUri = "";
-        if(method.equals("login")){
-            redirectUri = env.getProperty("oauth2." + registrationId + ".redirect-uri-login");
-        }else{
-            redirectUri = env.getProperty("oauth2." + registrationId + ".redirect-uri-auth");
-        }
+        redirectUri = env.getProperty("oauth2." + registrationId + ".redirect-uri-login");
         String tokenUri = env.getProperty("oauth2." + registrationId + ".token-uri");
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

@@ -16,6 +16,5 @@ public class GetEventsInfo {
     private String date;
     private String startTime;
     private String endTime;
-
     private String description;
 }
