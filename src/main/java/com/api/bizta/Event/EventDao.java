@@ -34,8 +34,10 @@ public class EventDao {
                 "where planIdx = ? and userIdx = ? and status = 'active';";
 
         Object[] deleteEventParams;
-        deleteEventParams = new Object[]{postEventReq.get(0).getPlanIdx(), postEventReq.get(0).getUserIdx()};
-        this.jdbcTemplate.update(deleteEventQuery, deleteEventParams);
+        if(postEventReq.size() > 1) {
+            deleteEventParams = new Object[]{postEventReq.get(0).getPlanIdx(), postEventReq.get(0).getUserIdx()};
+            this.jdbcTemplate.update(deleteEventQuery, deleteEventParams);
+        }
 
         Object[] makeEventParams;
         for(PostEventReq eventReq : postEventReq){

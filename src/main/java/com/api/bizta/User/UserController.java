@@ -32,36 +32,38 @@ public class UserController {
     // 유저 회원가입
     @ResponseBody
     @PostMapping("/sign-up")
-    public ResponseEntity<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
-        // 이메일 빈칸 확인
-        if (postUserReq.getEmail() == null) {
-            return ResponseEntity.status(EMPTY_EMAIL.getCode()).build();
-        }
-        // 아이디 빈칸 확인
-        if (postUserReq.getId() == null) {
-            return ResponseEntity.status(EMPTY_ID.getCode()).build();
-        }
-        // 닉네임 빈칸 확인
-        if (postUserReq.getNickName() == null) {
-            return ResponseEntity.status(EMPTY_NICKNAME.getCode()).build();
-        }
-        // 비밀번호 빈칸 확인
-        if (postUserReq.getPassword() == null) {
-            return ResponseEntity.status(EMPTY_PASSWORD.getCode()).build();
-        }
-        // 이메일 정규표현식 확인 ( email@~.~ )
-        if (!isRegexEmail(postUserReq.getEmail())) {
-            return ResponseEntity.status(INVALID_EMAIL.getCode()).build();
-        }
+    public PostUserRes createUser(@RequestBody PostUserReq postUserReq) {
+//        // 이메일 빈칸 확인
+//        if (postUserReq.getEmail() == null) {
+//            return ResponseEntity.status(EMPTY_EMAIL.getCode()).build();
+//        }
+//        // 아이디 빈칸 확인
+//        if (postUserReq.getId() == null) {
+//            return ResponseEntity.status(EMPTY_ID.getCode()).build();
+//        }
+//        // 닉네임 빈칸 확인
+//        if (postUserReq.getNickName() == null) {
+//            return ResponseEntity.status(EMPTY_NICKNAME.getCode()).build();
+//        }
+//        // 비밀번호 빈칸 확인
+//        if (postUserReq.getPassword() == null) {
+//            return ResponseEntity.status(EMPTY_PASSWORD.getCode()).build();
+//        }
+//        // 이메일 정규표현식 확인 ( email@~.~ )
+//        if (!isRegexEmail(postUserReq.getEmail())) {
+//            return ResponseEntity.status(INVALID_EMAIL.getCode()).build();
+//        }
 
         // 이메일 중복 확인은 [Service - Provider - Dao] 에서 합니다.
         try {
             PostUserRes postUserRes;
             postUserRes = userService.createUser(postUserReq);
-            return new ResponseEntity<>(postUserRes, HttpStatus.OK);
+//            return new ResponseEntity<>(postUserRes, HttpStatus.OK);
+            return postUserRes;
         } catch (BaseException e) {
             HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
-            return ResponseEntity.status(httpStatus).build();
+//            return ResponseEntity.status(httpStatus).build();
+            return null;
         }
     }
 
@@ -127,13 +129,14 @@ public class UserController {
     }
 
     @GetMapping(value = "/auth/oauth2/code/{registrationId}", produces = "application/json")
-    public void oauthAuth(@RequestParam String code, @PathVariable String registrationId) {
+    public ResponseEntity<PostUserRes> oauthAuth(@RequestParam String code, @PathVariable String registrationId) {
         GetGoogleInfo getGoogleInfo = userProvider.getGoogleInfo("auth", code, registrationId);
 
 //        PostLoginRes postLoginRes;
 //        postLoginRes = new PostLoginRes(getGoogleInfo.getId(), getGoogleInfo.getPassword(), getGoogleInfo.getEmail(), getGoogleInfo.getNickName());
         PostUserReq postUserReq;
         postUserReq = new PostUserReq(getGoogleInfo.getId(), getGoogleInfo.getNickName(), getGoogleInfo.getPassword(), getGoogleInfo.getEmail());
-        createUser(postUserReq);
+        PostUserRes postUserRes = createUser(postUserReq);
+        return new ResponseEntity<>(postUserRes, HttpStatus.OK);
     }
 }
