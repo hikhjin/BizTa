@@ -25,18 +25,28 @@ public class EventDao {
     public void setDataSource(DataSource dataSource) {this.jdbcTemplate = new JdbcTemplate(dataSource);}
 
     // event 생성
-    public int makeEvent(PostEventReq postEventReq){
-                String makeEventQuery = "insert into Event " +
+    public void makeEvent(List<PostEventReq> postEventReq){
+        String makeEventQuery = "insert into Event " +
                 "(planIdx, userIdx, title, date, startTime, endTime, description) " +
                 "values (?,?,?,?,?,?,?); ";
-        Object[] makeEventParams = new Object[]{postEventReq.getPlanIdx(), postEventReq.getUserIdx(), postEventReq.getTitle(),
-        postEventReq.getDate(), postEventReq.getStartTime(), postEventReq.getEndTime(), postEventReq.getDescription()};
 
-        this.jdbcTemplate.update(makeEventQuery, makeEventParams);
+        String deleteEventQuery = "delete from Event " +
+                "where planIdx = ? and userIdx = ? and status = 'active';";
 
-        String lastInsertIdxQuery = "select last_insert_id()";
+        Object[] deleteEventParams;
+        deleteEventParams = new Object[]{postEventReq.get(0).getPlanIdx(), postEventReq.get(0).getUserIdx()};
+        this.jdbcTemplate.update(deleteEventQuery, deleteEventParams);
 
-        return this.jdbcTemplate.queryForObject(lastInsertIdxQuery, int.class);
+        Object[] makeEventParams;
+        for(PostEventReq eventReq : postEventReq){
+            makeEventParams = new Object[]{eventReq.getPlanIdx(), eventReq.getUserIdx(), eventReq.getTitle(),
+            eventReq.getDate(), eventReq.getStartTime(), eventReq.getEndTime(), eventReq.getDescription()};
+            this.jdbcTemplate.update(makeEventQuery, makeEventParams);
+        }
+//
+//        String lastInsertIdxQuery = "select last_insert_id()";
+//
+//        return this.jdbcTemplate.queryForObject(lastInsertIdxQuery, int.class);
     }
 
     // planIdx 와 userIdx 로 중복되는 event 시간이 있는지 확인, 없으면 0 리턴

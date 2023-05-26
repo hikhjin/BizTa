@@ -44,14 +44,13 @@ public class EventService {
         this.env = env;
     }
 
-    public PostEventRes makeEvent(PostEventReq postEventReq) throws BaseException {
-        if(eventProvider.checkDuplicateTime(postEventReq.getPlanIdx(), postEventReq.getUserIdx(), postEventReq.getDate(), postEventReq.getStartTime(), postEventReq.getEndTime()) != 0){
-            throw new BaseException(DUPLICATE_TIME);
-        }
+    public void makeEvent(List<PostEventReq> postEventReq) throws BaseException {
+//        if(eventProvider.checkDuplicateTime(postEventReq.getPlanIdx(), postEventReq.getUserIdx(), postEventReq.getDate(), postEventReq.getStartTime(), postEventReq.getEndTime()) != 0){
+//            throw new BaseException(DUPLICATE_TIME);
+//        }
 
         try{
-            int eventIdx = eventDao.makeEvent(postEventReq);
-            return new PostEventRes(eventIdx);
+            eventDao.makeEvent(postEventReq);
         } catch (Exception exception) {
             System.out.println(exception);
             throw new BaseException(DATABASE_ERROR);
