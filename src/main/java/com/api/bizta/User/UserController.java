@@ -81,15 +81,15 @@ public class UserController {
         }
     }
 
-//    @GetMapping("/{method}/google")
-//    public RedirectView googleLoginUri(@PathVariable String method){
-//        String url = "https://accounts.google.com/o/oauth2/auth?client_id=356448383900-kt44mvojcmdqji36q3ad66r8gtp6am5r.apps.googleusercontent.com&";
+    @GetMapping("/{method}/google")
+    public RedirectView googleLoginUri(@PathVariable String method){
+        String url = "https://accounts.google.com/o/oauth2/auth?client_id=356448383900-kt44mvojcmdqji36q3ad66r8gtp6am5r.apps.googleusercontent.com&";
 //        url += "redirect_uri=http://localhost:8080/users/" + method + "/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
-////        url += "redirect_uri=https://www.bizta.store/users/" + method + "/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
-//        return new RedirectView(url);
-//    }
+        url += "redirect_uri=https://www.bizta.store/users/" + method + "/oauth2/code/google&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/calendar";
+        return new RedirectView(url);
+    }
 
-
+//    // google login
 //    @GetMapping(value = "/{method}/oauth2/code/{registrationId}", produces = "application/json")
 //    public ResponseEntity<PostLoginRes> oauthLogin (@PathVariable String method, @RequestParam String code, @PathVariable String registrationId) {
 //        GetGoogleInfo getGoogleInfo = userProvider.getGoogleInfo(method, code, registrationId);
@@ -110,25 +110,29 @@ public class UserController {
 //        postLoginRes = new PostLoginRes(getGoogleInfo.getId(), getGoogleInfo.getPassword(), getGoogleInfo.getEmail(), getGoogleInfo.getNickName(), getGoogleInfo.getGetTokenRes());
 //        return new ResponseEntity<>(postLoginRes, HttpStatus.OK);
 //    }
-
     @GetMapping(value = "/login/oauth2/code/{registrationId}", produces = "application/json")
-    public RedirectView oauthLogin(@RequestParam String code, @PathVariable String registrationId, HttpSession session) {
-        GetGoogleInfo getGoogleInfo = userProvider.getGoogleInfo(code, registrationId);
+    public ResponseEntity<PostLoginRes> oauthLogin (@RequestParam String code, @PathVariable String registrationId) {
+        GetGoogleInfo getGoogleInfo = userProvider.getGoogleInfo("login", code, registrationId);
 
-        // method가 login일 때만 받기
-        PostLoginReq postLoginReq = new PostLoginReq(getGoogleInfo.getId(), getGoogleInfo.getPassword());
-        try {
-            userService.login(postLoginReq);
-            String accessToken = getGoogleInfo.getGetTokenRes().getAccessToken();
+        PostLoginRes postLoginRes;
+            PostLoginReq postLoginReq = new PostLoginReq(getGoogleInfo.getId(), getGoogleInfo.getPassword());
+            try {
+                postLoginRes = userService.login(postLoginReq);
+                postLoginRes.setGetTokenRes(getGoogleInfo.getGetTokenRes());
+                return new ResponseEntity<>(postLoginRes, HttpStatus.OK);
+            } catch (BaseException e) {
+                HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
+                return ResponseEntity.status(httpStatus).build();
+            }
+    }
 
-            session.setAttribute("Authorization", "Bearer " + accessToken);
+    @GetMapping(value = "/auth/oauth2/code/{registrationId}", produces = "application/json")
+    public ResponseEntity<PostLoginRes> oauthAuth(@RequestParam String code, @PathVariable String registrationId, HttpSession session) {
+        GetGoogleInfo getGoogleInfo = userProvider.getGoogleInfo("auth", code, registrationId);
 
-            String redirectUrl = "https://www.bizta.store/places";
+        PostLoginRes postLoginRes;
 
-            return new RedirectView(redirectUrl);
-        } catch (BaseException e) {
-            HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
-            return null;
-        }
+        postLoginRes = new PostLoginRes(getGoogleInfo.getId(), getGoogleInfo.getPassword(), getGoogleInfo.getEmail(), getGoogleInfo.getNickName());
+        return new ResponseEntity<>(postLoginRes, HttpStatus.OK);
     }
 }
