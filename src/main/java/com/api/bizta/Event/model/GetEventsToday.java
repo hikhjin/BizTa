@@ -9,10 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetEventInfo {
+public class GetEventsToday {
     private int planIdx;
     private int userIdx;
-    private int eventIdx;
     private String title;
     private String date;
     private String startTime;

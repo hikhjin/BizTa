@@ -1,9 +1,6 @@
 package com.api.bizta.Event;
 
-import com.api.bizta.Event.model.GetEventInfo;
-import com.api.bizta.Event.model.GetEventsInfo;
-import com.api.bizta.Event.model.PatchEventReq;
-import com.api.bizta.Event.model.PostEventReq;
+import com.api.bizta.Event.model.*;
 import com.api.bizta.Plan.model.Interest;
 import com.api.bizta.Plan.model.PlanIdx;
 import com.api.bizta.Plan.model.PlanInfo;
@@ -156,7 +153,7 @@ public class EventDao {
 
     public List<GetEventsInfo> getEventsInfo(int planIdx) {
 
-        String getEventsInfoQuery = "select planIdx, userIdx, title, date, startTime, endTime, description " +
+        String getEventsInfoQuery = "select planIdx, userIdx, eventIdx, title, date, startTime, endTime, description " +
                     "from Event where planIdx = ? and status = 'active';";
 
         int getEventsParam = planIdx;
@@ -175,6 +172,7 @@ public class EventDao {
                 GetEventsInfo getEventsInfo = new GetEventsInfo();
                 getEventsInfo.setPlanIdx(rs.getInt("planIdx"));
                 getEventsInfo.setUserIdx(rs.getInt("userIdx"));
+                getEventsInfo.setEventIdx(rs.getInt("eventIdx"));
                 getEventsInfo.setTitle(rs.getString("title"));
                 getEventsInfo.setDate(rs.getString("date"));
                 getEventsInfo.setStartTime(rs.getString("startTime"));
@@ -191,19 +189,19 @@ public class EventDao {
                 (rs, rowNum) -> new PlanIdx(rs.getInt("planIdx")), userIdx);
     }
 
-    public List<GetEventsInfo> getEventsToday(int userIdx, List<PlanIdx> planIdxes) {
+    public List<GetEventsToday> getEventsToday(int userIdx, List<PlanIdx> planIdxes) {
 
         String getEventsTodayQuery =
                 "SELECT planIdx, userIdx, title, date, startTime, endTime, description " +
                         "FROM Event WHERE userIdx=? AND planIdx=? AND date=? AND status = 'active';";
         try {
 
-            List<GetEventsInfo> eventsToday = new ArrayList<>();
+            List<GetEventsToday> eventsToday = new ArrayList<>();
             LocalDate today = LocalDate.now();
 
             for (PlanIdx planIdx : planIdxes) {
                 this.jdbcTemplate.query(getEventsTodayQuery, (rs, rsNum) -> {
-                    GetEventsInfo eventInfo = new GetEventsInfo(
+                    GetEventsToday eventToday = new GetEventsToday(
                             rs.getInt("planIdx"),
                             rs.getInt("userIdx"),
                             rs.getString("title"),
@@ -212,8 +210,8 @@ public class EventDao {
                             rs.getString("endTime"),
                             rs.getString("description")
                     );
-                    eventsToday.add(eventInfo);
-                    return eventInfo;
+                    eventsToday.add(eventToday);
+                    return eventToday;
                 }, userIdx, planIdx.getPlanIdx(), today);
             }
 

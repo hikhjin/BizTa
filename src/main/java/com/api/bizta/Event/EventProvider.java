@@ -2,6 +2,7 @@ package com.api.bizta.Event;
 
 import com.api.bizta.Event.model.GetEventInfo;
 import com.api.bizta.Event.model.GetEventsInfo;
+import com.api.bizta.Event.model.GetEventsToday;
 import com.api.bizta.Place.model.GetPlaceInfo;
 import com.api.bizta.Plan.model.PlanIdx;
 import com.api.bizta.Plan.model.PlanInfo;
@@ -79,10 +80,10 @@ public class EventProvider {
         }
     }
 
-    public  List<GetEventsInfo> getEventsToday(int userIdx) throws BaseException{
+    public  List<GetEventsToday> getEventsToday(int userIdx) throws BaseException{
         try{
             List<PlanIdx> planIdxes = getPlanIdxes(userIdx);
-            List<GetEventsInfo> eventsToday = eventDao.getEventsToday(userIdx, planIdxes);
+            List<GetEventsToday> eventsToday = eventDao.getEventsToday(userIdx, planIdxes);
             return eventsToday;
         }catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
