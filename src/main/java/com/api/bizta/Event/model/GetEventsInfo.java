@@ -12,6 +12,7 @@ import lombok.Setter;
 public class GetEventsInfo {
     private int planIdx;
     private int userIdx;
+    private int eventIdx;
     private String title;
     private String date;
     private String startTime;
