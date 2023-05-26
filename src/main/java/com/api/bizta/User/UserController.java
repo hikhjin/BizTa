@@ -127,12 +127,13 @@ public class UserController {
     }
 
     @GetMapping(value = "/auth/oauth2/code/{registrationId}", produces = "application/json")
-    public ResponseEntity<PostLoginRes> oauthAuth(@RequestParam String code, @PathVariable String registrationId, HttpSession session) {
+    public void oauthAuth(@RequestParam String code, @PathVariable String registrationId) {
         GetGoogleInfo getGoogleInfo = userProvider.getGoogleInfo("auth", code, registrationId);
 
-        PostLoginRes postLoginRes;
-
-        postLoginRes = new PostLoginRes(getGoogleInfo.getId(), getGoogleInfo.getPassword(), getGoogleInfo.getEmail(), getGoogleInfo.getNickName());
-        return new ResponseEntity<>(postLoginRes, HttpStatus.OK);
+//        PostLoginRes postLoginRes;
+//        postLoginRes = new PostLoginRes(getGoogleInfo.getId(), getGoogleInfo.getPassword(), getGoogleInfo.getEmail(), getGoogleInfo.getNickName());
+        PostUserReq postUserReq;
+        postUserReq = new PostUserReq(getGoogleInfo.getId(), getGoogleInfo.getNickName(), getGoogleInfo.getPassword(), getGoogleInfo.getEmail());
+        createUser(postUserReq);
     }
 }

@@ -32,25 +32,26 @@ public class EventController {
 
     @ResponseBody
     @PostMapping
-    public ResponseEntity<PostEventRes> makeEvent(@RequestBody PostEventReq postEventReq){
+    public ResponseEntity<String> makeEvent(@RequestBody List<PostEventReq> postEventReq){
 
         try{
-            if(postEventReq.getUserIdx() != jwtService.getUserIdx()){
-                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
-            }
+            // 인증
+//            if(postEventReq.get(0).getUserIdx() != jwtService.getUserIdx()){
+//                return ResponseEntity.status(INVALID_USER_JWT.getCode()).build();
+//            }
 
-            if (postEventReq.getTitle().isBlank()) {
-                return ResponseEntity.status(EMPTY_TITLE.getCode()).build();
-            }
-
-            if(postEventReq.getDate().isBlank()){
-                return ResponseEntity.status(EMPTY_DATE.getCode()).build();
-            }
+//            if (postEventReq.getTitle().isBlank()) {
+//                return ResponseEntity.status(EMPTY_TITLE.getCode()).build();
+//            }
+//
+//            if(postEventReq.getDate().isBlank()){
+//                return ResponseEntity.status(EMPTY_DATE.getCode()).build();
+//            }
 
             // 중복되는 시간 있는지 확인하는 로직은 안에
-            PostEventRes postEventRes = eventService.makeEvent(postEventReq);
+            eventService.makeEvent(postEventReq);
 
-            return new ResponseEntity<>(postEventRes, HttpStatus.OK);
+            return new ResponseEntity<>("Good", HttpStatus.OK);
         }catch (BaseException e){
             HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
             return ResponseEntity.status(httpStatus).build();
