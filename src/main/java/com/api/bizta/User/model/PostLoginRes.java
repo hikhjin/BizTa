@@ -11,21 +11,24 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PostLoginRes {
     private int userIdx;
-    private String id;
-    private String password;
-    private String email;
-    private String nickName;
-    private GetTokenRes getTokenRes;
+//    private String id;
+//    private String password;
+//    private String email;
+//    private String nickName;
+    private String accessToken;
 
-    public PostLoginRes(String id, String password, String email, String nickName){
-        this.id = id;
-        this.password = password;
-        this.email = email;
-        this.nickName = nickName;
-    }
-
-    public PostLoginRes(int userIdx, String nickName){
+//    public PostLoginRes(String id, String password, String email, String nickName){
+//        this.id = id;
+//        this.password = password;
+//        this.email = email;
+//        this.nickName = nickName;
+//    }
+//
+//    public PostLoginRes(int userIdx, String nickName){
+//        this.userIdx = userIdx;
+//        this.nickName = nickName;
+//    }
+    public PostLoginRes(int userIdx){
         this.userIdx = userIdx;
-        this.nickName = nickName;
     }
 }
