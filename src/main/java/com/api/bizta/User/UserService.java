@@ -51,10 +51,9 @@ public class UserService {
         }
         try{
             int userIdx = userDao.createUser(postUserReq);
-            System.out.println("service userIdx: " + userIdx);
             //jwt 발급.
-            String jwt = jwtService.createJwt(userIdx);
-            return new PostUserRes(jwt, userIdx);
+//            String jwt = jwtService.createJwt(userIdx);
+            return new PostUserRes(userIdx);
 
         } catch (Exception exception) {
             System.out.println(exception);
@@ -78,6 +77,7 @@ public class UserService {
         if (!pwd.equals(getUserInfo.getPassword())) {
             throw new BaseException(FAILED_TO_LOGIN);
         }
+        String jwt = jwtService.createJwt(getUserInfo.getUserIdx());
 
 //        if (!getUserInfo.getPassword().equals(pwd)) {
 //            // jwt userIdx 확인
@@ -85,6 +85,6 @@ public class UserService {
 //                throw new BaseException(FAILED_TO_LOGIN);
 //            }
 //        }
-        return new PostLoginRes(getUserInfo.getUserIdx());
+        return new PostLoginRes(getUserInfo.getUserIdx(), jwt);
     }
 }

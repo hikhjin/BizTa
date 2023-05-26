@@ -15,7 +15,8 @@ public class PostLoginRes {
 //    private String password;
 //    private String email;
 //    private String nickName;
-    private String accessToken;
+//    private String accessToken;
+    private String jwt;
 
 //    public PostLoginRes(String id, String password, String email, String nickName){
 //        this.id = id;
@@ -28,7 +29,4 @@ public class PostLoginRes {
 //        this.userIdx = userIdx;
 //        this.nickName = nickName;
 //    }
-    public PostLoginRes(int userIdx){
-        this.userIdx = userIdx;
-    }
 }
