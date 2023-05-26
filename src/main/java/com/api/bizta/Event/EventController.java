@@ -126,10 +126,10 @@ public class EventController {
 
     @ResponseBody
     @GetMapping("/today")
-    public ResponseEntity<List<GetEventsToday>> getEventsToday(){
+    public ResponseEntity<List<GetEventsInfo>> getEventsToday(){
         try{
             int userIdx = jwtService.getUserIdx();
-            List<GetEventsToday> eventsToday = eventProvider.getEventsToday(userIdx);
+            List<GetEventsInfo> eventsToday = eventProvider.getEventsToday(userIdx);
             return new ResponseEntity<>(eventsToday, HttpStatus.OK);
         }catch (BaseException e){
             HttpStatus httpStatus = HttpStatus.valueOf(e.getStatus().getCode());
