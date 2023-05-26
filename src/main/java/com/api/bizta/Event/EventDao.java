@@ -189,21 +189,22 @@ public class EventDao {
                 (rs, rowNum) -> new PlanIdx(rs.getInt("planIdx")), userIdx);
     }
 
-    public List<GetEventsToday> getEventsToday(int userIdx, List<PlanIdx> planIdxes) {
+    public List<GetEventsInfo> getEventsToday(int userIdx, List<PlanIdx> planIdxes) {
 
         String getEventsTodayQuery =
-                "SELECT planIdx, userIdx, title, date, startTime, endTime, description " +
+                "SELECT planIdx, userIdx, eventIdx, title, date, startTime, endTime, description " +
                         "FROM Event WHERE userIdx=? AND planIdx=? AND date=? AND status = 'active';";
         try {
 
-            List<GetEventsToday> eventsToday = new ArrayList<>();
+            List<GetEventsInfo> eventsToday = new ArrayList<>();
             LocalDate today = LocalDate.now();
 
             for (PlanIdx planIdx : planIdxes) {
                 this.jdbcTemplate.query(getEventsTodayQuery, (rs, rsNum) -> {
-                    GetEventsToday eventToday = new GetEventsToday(
+                    GetEventsInfo eventToday = new GetEventsInfo(
                             rs.getInt("planIdx"),
                             rs.getInt("userIdx"),
+                            rs.getInt("eventIdx"),
                             rs.getString("title"),
                             rs.getString("date"),
                             rs.getString("startTime"),

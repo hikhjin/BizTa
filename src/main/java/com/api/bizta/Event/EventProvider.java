@@ -80,10 +80,10 @@ public class EventProvider {
         }
     }
 
-    public  List<GetEventsToday> getEventsToday(int userIdx) throws BaseException{
+    public  List<GetEventsInfo> getEventsToday(int userIdx) throws BaseException{
         try{
             List<PlanIdx> planIdxes = getPlanIdxes(userIdx);
-            List<GetEventsToday> eventsToday = eventDao.getEventsToday(userIdx, planIdxes);
+            List<GetEventsInfo> eventsToday = eventDao.getEventsToday(userIdx, planIdxes);
             return eventsToday;
         }catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
