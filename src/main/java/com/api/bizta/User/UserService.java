@@ -79,12 +79,12 @@ public class UserService {
             throw new BaseException(FAILED_TO_LOGIN);
         }
 
-        if (!getUserInfo.getPassword().equals(pwd)) {
-            // jwt userIdx 확인
-            if (getUserInfo.getUserIdx() != jwtService.getUserIdx()) {
-                throw new BaseException(FAILED_TO_LOGIN);
-            }
-        }
-        return new PostLoginRes(getUserInfo.getUserIdx(), getUserInfo.getNickName());
+//        if (!getUserInfo.getPassword().equals(pwd)) {
+//            // jwt userIdx 확인
+//            if (getUserInfo.getUserIdx() != jwtService.getUserIdx()) {
+//                throw new BaseException(FAILED_TO_LOGIN);
+//            }
+//        }
+        return new PostLoginRes(getUserInfo.getUserIdx());
     }
 }
